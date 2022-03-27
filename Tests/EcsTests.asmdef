@@ -1,0 +1,18 @@
+{
+    "name": "EcsTests",
+    "rootNamespace": "",
+    "references": [
+        "GUID:597984ad3c4df8546adbffb17ebb500c"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
