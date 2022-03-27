@@ -23,7 +23,13 @@ namespace Ecs {
 
         protected World world;
 
+        // Hot queries are cached. That means that the matchedEntities table is set up once and
+        // then only updated when components are added or removed.
+        protected bool hot;
+        public bool IsCached => hot;
+
         private Mask mask;
+        public Mask Mask => mask;
 
         // Set of all entities that match the query. The key is the entity id, and the value
         // is not important (bool to save memory).
@@ -31,19 +37,65 @@ namespace Ecs {
 
         public Query(World world) {
             this.world = world;
+
             mask = new Mask(world);
             matchedEntities = new SparseSet<bool>();
         }
 
+        internal void OnCache() {
+            if (hot)
+                return;
+
+            Fetch();
+            hot = true;
+        }
 
         public Query Inc<TComponent>() where TComponent : struct {
             mask.Inc<TComponent>();
+            if (hot)
+                throw new InvalidOperationException("A query's mask cannot be changed after caching.");
             return this;
         }
 
         public Query Exc<TComponent>() where TComponent : struct {
             mask.Exc<TComponent>();
+            if (hot)
+                throw new InvalidOperationException("A query's mask cannot be changed after caching.");
             return this;
+        }
+
+        public void OnAddComponentToEntity(int entityId, int poolId) {
+            if (matchedEntities.Contains(entityId)) {
+                // The entity previously matched the query.
+                // Checks whether the query still matches after adding the component.
+                if (! mask.IsCompatibleAfterAdddingComponent(poolId)) {
+                    matchedEntities.Remove(entityId);
+                }
+            }
+            else {
+                // The entity previously did not match / was just created.
+                // Checks whether the query fully matches after adding the component.
+                if (mask.IsCompatible(entityId)) {
+                    matchedEntities.Add(entityId);
+                }
+            }
+        }
+
+        public void OnRemoveComponentFromEntity(int entityId, int poolId) {
+            if (matchedEntities.Contains(entityId)) {
+                // The entity previously matched the query.
+                // Checks whether the query still matches after removing the component.
+                if (! mask.IsCompatibleAfterRemovingComponent(poolId)) {
+                    matchedEntities.Remove(entityId);
+                }
+            }
+            else {
+                // The entity previously did not match / was just created.
+                // Checks whether the query fully matches after removing the component.
+                if (mask.IsCompatible(entityId)) {
+                    matchedEntities.Add(entityId);
+                }
+            }
         }
 
         public void Fetch() {
@@ -116,7 +168,8 @@ namespace Ecs {
         public delegate void ForEachAction(Entity e, ref C1 c1);
 
         public void ForEach(ForEachAction action) {
-            Fetch();
+            if (! hot) Fetch();
+
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
             foreach (int id in matchedEntities.Keys) {
                 action(new Entity(world, id), ref pool1.GetUnsafe(id));
@@ -138,7 +191,8 @@ namespace Ecs {
         public delegate void ForEachAction(Entity e, ref C1 c1, ref C2 c2);
 
         public void ForEach(ForEachAction action) {
-            Fetch();
+            if (! hot) Fetch();
+
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
             ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
             foreach (int id in matchedEntities.Keys) {
@@ -161,7 +215,8 @@ namespace Ecs {
         public delegate void ForEachAction(Entity e, ref C1 c1, ref C2 c2, ref C3 c3);
 
         public void ForEach(ForEachAction action) {
-            Fetch();
+            if (! hot) Fetch();
+
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
             ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
             ComponentPool<C3> pool3 = world.GetComponentPool<C3>();
@@ -189,7 +244,8 @@ namespace Ecs {
         public delegate void ForEachAction(Entity e, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4);
 
         public void ForEach(ForEachAction action) {
-            Fetch();
+            if (! hot) Fetch();
+
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
             ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
             ComponentPool<C3> pool3 = world.GetComponentPool<C3>();
@@ -220,7 +276,8 @@ namespace Ecs {
         public delegate void ForEachAction(Entity e, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5);
 
         public void ForEach(ForEachAction action) {
-            Fetch();
+            if (! hot) Fetch();
+
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
             ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
             ComponentPool<C3> pool3 = world.GetComponentPool<C3>();

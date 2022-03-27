@@ -69,6 +69,26 @@ namespace Ecs.Benchmarks {
             }
         }
 
+        public class BenchHotQueryTwoComponents : Benchmark {
+            private World world;
+
+            public BenchHotQueryTwoComponents(int entityCount) {
+                world = new World();
+
+                for (int i = 0; i < entityCount; i ++) {
+                    world.Spawn().Add<Position>().Add<Rotation>();
+                }
+            }
+
+            public void Run(int n) {
+                var query = world.GetCachedQuery(new Query<Position, Rotation>(world));
+
+                for (int i = 0; i < n; i ++){
+                    query.ForEach((Entity e, ref Position pos, ref Rotation rot) => { });
+                }
+            }
+        }
+
 
         private void Start() {
             Application.targetFrameRate = 10;
@@ -90,6 +110,12 @@ namespace Ecs.Benchmarks {
             Benchmark.LogProfile(
                 $"Querying {entityCount} entities with Position and Rotation",
                 new BenchQueryTwoComponents(entityCount).Run, iterations
+            );
+            yield return null;
+
+            Benchmark.LogProfile(
+                $"Querying {entityCount} entities (hot query) with Position and Rotation",
+                new BenchHotQueryTwoComponents(entityCount).Run, iterations
             );
             yield return null;
         }
