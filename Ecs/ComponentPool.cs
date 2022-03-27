@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
-using UnityEngine;
 
 namespace Ecs {
     public class ComponentPool<TComponent> : IComponentPool where TComponent : struct {

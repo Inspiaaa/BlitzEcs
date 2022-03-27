@@ -48,6 +48,7 @@ namespace Ecs {
 
             IComponentPool smallestPool = null;
             int smallestCount = int.MaxValue;
+            Type componentTypeOfSmallestPool = null;
 
             foreach (Type componentType in componentsToInclude) {
                 if (! world.TryGetIComponentPool(componentType, out IComponentPool pool)) {
@@ -58,6 +59,7 @@ namespace Ecs {
                 if (pool.Count < smallestCount) {
                     smallestPool = pool;
                     smallestCount = pool.Count;
+                    componentTypeOfSmallestPool = componentType;
                 }
             }
 
@@ -75,6 +77,8 @@ namespace Ecs {
             // Then go over every individual component type and remove the entities that
             // do not match.
             foreach (Type componentType in componentsToInclude) {
+                if (componentTypeOfSmallestPool == componentType) continue;
+
                 IComponentPool pool;
                 world.TryGetIComponentPool(componentType, out pool);
 
