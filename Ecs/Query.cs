@@ -14,7 +14,7 @@ namespace Ecs {
                 idx = 0;
             }
 
-            public Entity Current => new Entity(query.world, query.matchedEntities.DirectValues[idx]);
+            public Entity Current => new Entity(query.world, query.matchedEntities.DirectKeys[idx]);
 
             public bool MoveNext() {
                 return ++idx < query.matchedEntities.Count;
@@ -25,12 +25,14 @@ namespace Ecs {
 
         private List<Type> componentsToInclude;
 
-        protected SparseSet<int> matchedEntities;
+        // Set of all entities that match the query. The key is the entity id, and the value
+        // is not important (bool to save memory).
+        protected SparseSet<bool> matchedEntities;
 
         public Query(World world) {
             this.world = world;
             componentsToInclude = new List<Type>();
-            matchedEntities = new SparseSet<int>();
+            matchedEntities = new SparseSet<bool>();
         }
 
         public Query Inc<TComponent>() where TComponent : struct {
@@ -71,7 +73,7 @@ namespace Ecs {
 
             // Assume that all entities in the smallest pool have all components.
             foreach (int id in smallestPool.EntityIds) {
-                matchedEntities.Add(id, id);
+                matchedEntities.Add(id);
             }
 
             // Then go over every individual component type and remove the entities that
@@ -112,7 +114,7 @@ namespace Ecs {
         public void ForEach(ForEachAction action) {
             Fetch();
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
-            foreach (int id in matchedEntities.Values) {
+            foreach (int id in matchedEntities.Keys) {
                 action(new Entity(world, id), ref pool1.GetUnsafe(id));
             }
         }
@@ -135,7 +137,7 @@ namespace Ecs {
             Fetch();
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
             ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
-            foreach (int id in matchedEntities.Values) {
+            foreach (int id in matchedEntities.Keys) {
                 action(new Entity(world, id), ref pool1.GetUnsafe(id), ref pool2.GetUnsafe(id));
             }
         }
@@ -159,7 +161,7 @@ namespace Ecs {
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
             ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
             ComponentPool<C3> pool3 = world.GetComponentPool<C3>();
-            foreach (int id in matchedEntities.Values) {
+            foreach (int id in matchedEntities.Keys) {
                 action(
                     new Entity(world, id), ref pool1.GetUnsafe(id), ref pool2.GetUnsafe(id),
                     ref pool3.GetUnsafe(id));
@@ -188,7 +190,7 @@ namespace Ecs {
             ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
             ComponentPool<C3> pool3 = world.GetComponentPool<C3>();
             ComponentPool<C4> pool4 = world.GetComponentPool<C4>();
-            foreach (int id in matchedEntities.Values) {
+            foreach (int id in matchedEntities.Keys) {
                 action(
                     new Entity(world, id), ref pool1.GetUnsafe(id), ref pool2.GetUnsafe(id),
                     ref pool3.GetUnsafe(id), ref pool4.GetUnsafe(id));
@@ -220,7 +222,7 @@ namespace Ecs {
             ComponentPool<C3> pool3 = world.GetComponentPool<C3>();
             ComponentPool<C4> pool4 = world.GetComponentPool<C4>();
             ComponentPool<C5> pool5 = world.GetComponentPool<C5>();
-            foreach (int id in matchedEntities.Values) {
+            foreach (int id in matchedEntities.Keys) {
                 action(
                     new Entity(world, id), ref pool1.GetUnsafe(id), ref pool2.GetUnsafe(id),
                     ref pool3.GetUnsafe(id), ref pool4.GetUnsafe(id), ref pool5.GetUnsafe(id));
