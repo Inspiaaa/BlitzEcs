@@ -118,39 +118,43 @@ namespace Ecs {
         public ComponentEnumerator Components => new ComponentEnumerator(this);
 
         public struct ComponentEnumerator {
-            public readonly ComponentPool<TComponent> pool;
             private int idx;
+            private int count;
+            private TComponent[] components;
 
             public ComponentEnumerator(ComponentPool<TComponent> pool) {
-                this.pool = pool;
+                count = pool.count;
+                components = pool.components;
                 idx = -1;
             }
 
             public ComponentEnumerator GetEnumerator() => this;
 
-            public TComponent Current => pool.components[idx];
+            public TComponent Current => components[idx];
 
             public bool MoveNext() {
-                return ++idx < pool.count;
+                return ++idx < count;
             }
         }
     }
 
     public struct PoolEntityIdEnumerator {
-        private IComponentPool pool;
         private int idx;
+        private int count;
+        private int[] entityIds;
 
         public PoolEntityIdEnumerator(IComponentPool pool) {
-            this.pool = pool;
+            count = pool.Count;
+            entityIds = pool.RawEntityIds;
             idx = -1;
         }
 
         public PoolEntityIdEnumerator GetEnumerator() => this;
 
-        public int Current => pool.RawEntityIds[idx];
+        public int Current => entityIds[idx];
 
         public bool MoveNext() {
-            return ++idx < pool.Count;
+            return ++idx < count;
         }
     }
 }

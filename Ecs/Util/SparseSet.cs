@@ -103,38 +103,42 @@ namespace Ecs {
         public ValueEnumerator Values => new ValueEnumerator(this);
 
         public struct KeyEnumerator {
-            private SparseSet<T> set;
             private int idx;
+            private int count;
+            private int[] keys;
 
             public KeyEnumerator(SparseSet<T> set) {
-                this.set = set;
                 idx = -1;
+                count = set.count;
+                keys = set.dense;
             }
 
             public KeyEnumerator GetEnumerator() => this;
 
-            public int Current => set.dense[idx];
+            public int Current => keys[idx];
 
             public bool MoveNext() {
-                return ++idx < set.count;
+                return ++idx < count;
             }
         }
 
         public struct ValueEnumerator {
-            public readonly SparseSet<T> set;
             private int idx;
+            private int count;
+            private T[] values;
 
             public ValueEnumerator(SparseSet<T> set) {
-                this.set = set;
                 idx = -1;
+                count = set.count;
+                values = set.denseValues;
             }
 
             public ValueEnumerator GetEnumerator() => this;
 
-            public T Current => set.denseValues[idx];
+            public T Current => values[idx];
 
             public bool MoveNext() {
-                return ++idx < set.count;
+                return ++idx < count;
             }
         }
     }
