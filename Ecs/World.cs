@@ -6,6 +6,7 @@ using System;
 namespace Ecs {
     public class World : IEntityManager {
         private Dictionary<Type, IComponentPool> componentPoolsByType;
+        private List<IComponentPool> allComponentPools;
 
         private Stack<int> recycledEntities;
         private int entityCount;
@@ -17,6 +18,7 @@ namespace Ecs {
 
         public World() {
             componentPoolsByType = new Dictionary<Type, IComponentPool>();
+            allComponentPools = new List<IComponentPool>();
             recycledEntities = new Stack<int>();
             entityCount = 0;
             entityComponentCounts = new SparseSet<int>();
@@ -52,8 +54,9 @@ namespace Ecs {
                 return (ComponentPool<TComponent>)pool;
             }
 
-            ComponentPool<TComponent> newPool = new ComponentPool<TComponent>(this);
+            ComponentPool<TComponent> newPool = new ComponentPool<TComponent>(this, allComponentPools.Count);
             componentPoolsByType[type] = newPool;
+            allComponentPools.Add(newPool);
             return newPool;
         }
 
@@ -61,17 +64,33 @@ namespace Ecs {
             return componentPoolsByType.TryGetValue(componentType, out pool);
         }
 
-        public void DecComponentCount(int entityId) {
-            int count = entityComponentCounts.Get(entityId);
-            count -= 1;
-            entityComponentCounts.Add(entityId, count);
+        internal bool TryGetIComponentPool(int poolId, out IComponentPool pool) {
+            if (poolId >= allComponentPools.Count) {
+                pool = null;
+                return false;
+            }
 
+            pool = allComponentPools[poolId];
+            return true;
+        }
+
+        public void OnRemoveComponentFromEntity(int entityId, int poolId) {
+            // Update the hot queries.
+
+            // Reduce the component count.
+            int count = --entityComponentCounts.Get(entityId);
+
+            // Despawn when the entity has no components left.
             if (count <= 0) {
                 Despawn(entityId);
             }
         }
 
-        public void IncComponentCount(int entityId) => entityComponentCounts.Get(entityId) ++;
+        public void OnAddComponentToEntity(int entityId, int poolId) {
+            // Update the hot queries.
+            entityComponentCounts.Get(entityId) ++;
+        }
+
         public int GetComponentCount(Entity entity) => entityComponentCounts.Get(entity.Id);
 
         public bool IsEntityAlive(Entity entity) => entityComponentCounts.Contains(entity.Id);

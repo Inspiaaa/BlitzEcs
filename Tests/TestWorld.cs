@@ -75,8 +75,6 @@ namespace Ecs.Tests {
 
         [Test]
         public void Test_removing_decrements_world_entity_component_count() {
-            ComponentPool<bool> pool2 = new ComponentPool<bool>(world);
-
             Entity entity = world.Spawn();
             entity.Add<int>();
             entity.Add<bool>();

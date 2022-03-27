@@ -8,15 +8,15 @@ using System;
 namespace Ecs.Tests {
     public class TestComponentPool {
         private class MockEntityManager : IEntityManager {
-            public void IncComponentCount(int entity) { }
-            public void DecComponentCount(int entity) { }
+            public void OnAddComponentToEntity(int entityId, int poolId) { }
+            public void OnRemoveComponentFromEntity(int entityId, int poolId) { }
         }
 
         private ComponentPool<int> pool;
 
         [SetUp]
         public void Setup() {
-            pool = new ComponentPool<int>(new MockEntityManager());
+            pool = new ComponentPool<int>(new MockEntityManager(), 0);
         }
 
         [Test]

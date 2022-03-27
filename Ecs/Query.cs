@@ -23,7 +23,7 @@ namespace Ecs {
 
         protected World world;
 
-        private List<Type> componentsToInclude;
+        private Mask mask;
 
         // Set of all entities that match the query. The key is the entity id, and the value
         // is not important (bool to save memory).
@@ -31,18 +31,24 @@ namespace Ecs {
 
         public Query(World world) {
             this.world = world;
-            componentsToInclude = new List<Type>();
+            mask = new Mask(world);
             matchedEntities = new SparseSet<bool>();
         }
 
+
         public Query Inc<TComponent>() where TComponent : struct {
-            componentsToInclude.Add(typeof(TComponent));
+            mask.Inc<TComponent>();
+            return this;
+        }
+
+        public Query Exc<TComponent>() where TComponent : struct {
+            mask.Exc<TComponent>();
             return this;
         }
 
         public void Fetch() {
             matchedEntities.Clear();
-            if (componentsToInclude.Count == 0) {
+            if (mask.componentsToInclude.Count == 0) {
                 return;
             }
 
@@ -50,10 +56,9 @@ namespace Ecs {
 
             IComponentPool smallestPool = null;
             int smallestCount = int.MaxValue;
-            Type componentTypeOfSmallestPool = null;
 
-            foreach (Type componentType in componentsToInclude) {
-                if (! world.TryGetIComponentPool(componentType, out IComponentPool pool)) {
+            foreach (int poolId in mask.componentsToInclude) {
+                if (! world.TryGetIComponentPool(poolId, out IComponentPool pool)) {
                     // One of the required component pools does not exist, i.e. has 0 items.
                     // => There are no entities that match the query.
                     return;
@@ -61,7 +66,6 @@ namespace Ecs {
                 if (pool.Count < smallestCount) {
                     smallestPool = pool;
                     smallestCount = pool.Count;
-                    componentTypeOfSmallestPool = componentType;
                 }
             }
 
@@ -78,11 +82,11 @@ namespace Ecs {
 
             // Then go over every individual component type and remove the entities that
             // do not match.
-            foreach (Type componentType in componentsToInclude) {
-                if (componentTypeOfSmallestPool == componentType) continue;
+            foreach (int poolId in mask.componentsToInclude) {
+                if (smallestPool.PoolId == poolId) continue;
 
                 IComponentPool pool;
-                world.TryGetIComponentPool(componentType, out pool);
+                world.TryGetIComponentPool(poolId, out pool);
 
                 int[] entityIds = matchedEntities.DirectKeys;
                 for (int i = 0; i < matchedEntities.Count; i ++) {

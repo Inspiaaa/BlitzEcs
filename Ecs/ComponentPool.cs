@@ -7,6 +7,8 @@ namespace Ecs {
         // Uses a sparse set to map the entity IDs to the components.
 
         private IEntityManager world;
+        private int poolId;
+        public int PoolId => poolId;
 
         // Sparse array
         private int[] entityIdToComponentIdx;
@@ -18,11 +20,14 @@ namespace Ecs {
         private int count;
         public int Count => count;
 
-        public ComponentPool(IEntityManager world) {
+        public ComponentPool(IEntityManager world, int poolId) {
             this.world = world;
+            this.poolId = poolId;
+
             entityIdToComponentIdx = new int[1];
             componentIdxToEntityId = new int[1];
             components = new TComponent[1];
+            count = 0;
         }
 
         private int GetComponentIdx(int entityId) {
@@ -64,7 +69,7 @@ namespace Ecs {
             count ++;
 
             if (! isAlreadyContained) {
-                world.IncComponentCount(entityId);
+                world.OnAddComponentToEntity(entityId, poolId);
             }
         }
 
@@ -87,7 +92,7 @@ namespace Ecs {
 
             count --;
 
-            world.DecComponentCount(entityId);
+            world.OnRemoveComponentFromEntity(entityId, poolId);
         }
 
         public ref TComponent Get(int entityId) {
