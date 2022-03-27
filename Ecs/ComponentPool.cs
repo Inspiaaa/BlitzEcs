@@ -55,7 +55,7 @@ namespace Ecs {
             }
 
             if (entityId >= entityIdToComponentIdx.Length) {
-                Array.Resize(ref entityIdToComponentIdx, MathUtil.NextMultipleOf2(entityId + 1));
+                Array.Resize(ref entityIdToComponentIdx, MathUtil.NextPowerOf2(entityId + 1));
             }
 
             components[componentIdx] = component;

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine;
 
 namespace Ecs {
     public class SparseSet<T> {
@@ -36,21 +37,21 @@ namespace Ecs {
         public void Add(int key) => Add(key, default);
 
         public void Add(int key, T component) {
-            int componentIdx = count;
+            int valueIdx = count;
 
-            if (componentIdx >= denseValues.Length) {
+            if (valueIdx >= denseValues.Length) {
                 int newCapacity = 2 * denseValues.Length;
                 Array.Resize(ref denseValues, newCapacity);
                 Array.Resize(ref dense, newCapacity);
             }
 
             if (key + 1 >= sparse.Length) {
-                Array.Resize(ref sparse, MathUtil.NextMultipleOf2(key + 1));
+                Array.Resize(ref sparse, MathUtil.NextPowerOf2(key + 1));
             }
 
-            denseValues[componentIdx] = component;
-            dense[componentIdx] = key;
-            sparse[key] = componentIdx;
+            denseValues[valueIdx] = component;
+            dense[valueIdx] = key;
+            sparse[key] = valueIdx;
 
             count ++;
         }

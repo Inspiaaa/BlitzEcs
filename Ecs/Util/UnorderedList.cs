@@ -16,7 +16,7 @@ namespace Ecs {
 
         public void Add(T value) {
             if (count + 1 > values.Length) {
-                Array.Resize(ref values, MathUtil.NextMultipleOf2(count + 1));
+                Array.Resize(ref values, MathUtil.NextPowerOf2(count + 1));
             }
 
             values[count] = value;
