@@ -13,7 +13,11 @@ namespace Ecs {
         private int count;
         public int Count => count;
 
-        public SparseSet() {
+        public bool AutoPurge;
+
+        public SparseSet(bool autoPurge = true) {
+            this.AutoPurge = autoPurge;
+
             sparse = new int[1];
             dense = new int[1];
             denseValues = new T[1];
@@ -74,6 +78,10 @@ namespace Ecs {
             sparse[lastKey] = valueIdxToBeDeleted;
 
             count --;
+
+            if (AutoPurge && count <= dense.Length / 4) {
+                Purge();
+            }
         }
 
         public ref T Get(int key) {
@@ -97,6 +105,29 @@ namespace Ecs {
             // Remove any GC references.
             Array.Clear(denseValues, 0, count);
             count = 0;
+        }
+
+        public void Purge() {
+            // Reduces the unnecessary buffer space to save memory.
+
+            int highestKey = 0;
+
+            for (int i = 0; i < count; i ++) {
+                int key = sparse[i];
+                if (key > highestKey) {
+                    highestKey = key;
+                }
+            }
+
+            if (highestKey <= sparse.Length / 4) {
+                Array.Resize(ref sparse, MathUtil.NextPowerOf2(highestKey + 1));
+            }
+
+            if (count <= dense.Length / 4) {
+                int newCapacity = MathUtil.NextPowerOf2(count);
+                Array.Resize(ref dense, newCapacity);
+                Array.Resize(ref denseValues, newCapacity);
+            }
         }
 
         public KeyEnumerator Keys => new KeyEnumerator(this);

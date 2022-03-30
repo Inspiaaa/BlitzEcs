@@ -40,6 +40,7 @@ namespace Ecs {
 
             mask = new Mask(world);
             matchedEntities = new SparseSet<bool>();
+            matchedEntities.AutoPurge = false;
         }
 
         internal void OnCache() {
@@ -48,6 +49,7 @@ namespace Ecs {
 
             Fetch();
             hot = true;
+            matchedEntities.AutoPurge = true;
         }
 
         public Query Inc<TComponent>() where TComponent : struct {
@@ -153,6 +155,8 @@ namespace Ecs {
                     }
                 }
             }
+
+            matchedEntities.Purge();
         }
 
         public Enumerator GetEnumerator() => new Enumerator(this);

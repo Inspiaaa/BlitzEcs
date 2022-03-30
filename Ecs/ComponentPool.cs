@@ -92,6 +92,10 @@ namespace Ecs {
 
             count --;
 
+            if (count <= components.Length / 4) {
+                Purge();
+            }
+
             world.OnRemoveComponentFromEntity(entityId, poolId);
         }
 
@@ -116,6 +120,29 @@ namespace Ecs {
             // Remove any GC references.
             Array.Clear(components, 0, count);
             count = 0;
+        }
+
+        public void Purge() {
+            // Reduces the unnecessary buffer space to save memory.
+
+            int highestEntityId = 0;
+
+            for (int i = 0; i < count; i ++) {
+                int entityId = componentIdxToEntityId[i];
+                if (entityId > highestEntityId) {
+                    highestEntityId = entityId;
+                }
+            }
+
+            if (highestEntityId <= entityIdToComponentIdx.Length / 4) {
+                Array.Resize(ref entityIdToComponentIdx, MathUtil.NextPowerOf2(highestEntityId + 1));
+            }
+
+            if (count <= components.Length / 4) {
+                int newCapacity = MathUtil.NextPowerOf2(count);
+                Array.Resize(ref entityIdToComponentIdx, newCapacity);
+                Array.Resize(ref components, newCapacity);
+            }
         }
 
         public PoolEntityIdEnumerator EntityIds => new PoolEntityIdEnumerator(this);
