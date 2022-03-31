@@ -156,6 +156,21 @@ namespace Ecs {
                 }
             }
 
+            foreach (int poolId in mask.componentsToExclude) {
+                IComponentPool pool;
+                world.TryGetIComponentPool(poolId, out pool);
+
+                int[] entityIds = matchedEntities.DirectKeys;
+                for (int i = 0; i < matchedEntities.Count; i ++) {
+                    int id = entityIds[i];
+
+                    if (pool.Contains(id)) {
+                        matchedEntities.Remove(id);
+                        i --;
+                    }
+                }
+            }
+
             matchedEntities.Purge();
         }
 
