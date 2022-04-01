@@ -29,7 +29,7 @@ namespace Ecs {
 
         public bool IsCompatibleAfterAdddingComponent(int componentPoolId) {
             // Assumes that the entity was previously compatible and has now added a new component.
-            return componentsToExclude.Contains(componentPoolId);
+            return !componentsToExclude.Contains(componentPoolId);
         }
 
         public bool IsCompatibleAfterRemovingComponent(int componentPoolId) {

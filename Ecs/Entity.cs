@@ -35,5 +35,7 @@ namespace Ecs {
         public bool Has<TComponent>() where TComponent : struct {
             return world.GetComponentPool<TComponent>().Contains(id);
         }
+
+        public static implicit operator int(Entity e) => e.id;
     }
 }

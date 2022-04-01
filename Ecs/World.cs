@@ -9,8 +9,7 @@ namespace Ecs {
         private List<IComponentPool> allComponentPools;
 
         // Cached "hot" queries that are frequently used.
-        private List<List<Query>> queriesByIncludedComponent;
-        private List<List<Query>> queriesByExcludedComponent;
+        private List<List<Query>> queriesByComponents;
         private Dictionary<Mask, Query> cachedQueriesByMask;
 
         private Stack<int> recycledEntities;
@@ -32,8 +31,7 @@ namespace Ecs {
 
             entityComponentCounts = new SparseSet<int>();
 
-            queriesByIncludedComponent = new List<List<Query>>();
-            queriesByExcludedComponent = new List<List<Query>>();
+            queriesByComponents = new List<List<Query>>();
             cachedQueriesByMask = new Dictionary<Mask, Query>();
         }
 
@@ -58,23 +56,26 @@ namespace Ecs {
             List<int> excludes = query.Mask.componentsToExclude;
 
             foreach (int poolId in includes) {
-                while (queriesByIncludedComponent.Count <= poolId)
-                    queriesByIncludedComponent.Add(null);
+                while (queriesByComponents.Count <= poolId)
+                    queriesByComponents.Add(null);
 
-                if (queriesByIncludedComponent[poolId] == null)
-                    queriesByIncludedComponent[poolId] = new List<Query>();
+                if (queriesByComponents[poolId] == null)
+                    queriesByComponents[poolId] = new List<Query>();
 
-                queriesByIncludedComponent[poolId].Add(query);
+                queriesByComponents[poolId].Add(query);
             }
 
             foreach (int poolId in excludes) {
-                while (queriesByExcludedComponent.Count <= poolId)
-                    queriesByExcludedComponent.Add(null);
+                if (includes.Contains(poolId))
+                    continue;
 
-                if (queriesByExcludedComponent[poolId] == null)
-                    queriesByExcludedComponent[poolId] = new List<Query>();
+                while (queriesByComponents.Count <= poolId)
+                    queriesByComponents.Add(null);
 
-                queriesByExcludedComponent[poolId].Add(query);
+                if (queriesByComponents[poolId] == null)
+                    queriesByComponents[poolId] = new List<Query>();
+
+                queriesByComponents[poolId].Add(query);
             }
 
             cachedQueriesByMask[query.Mask] = query;
@@ -131,10 +132,10 @@ namespace Ecs {
         }
 
         private void UpdateHotQueriesAfterAddingComponent(int entityId, int poolId) {
-            if (poolId >= queriesByIncludedComponent.Count)
+            if (poolId >= queriesByComponents.Count)
                 return;
 
-            List<Query> pool = queriesByIncludedComponent[poolId];
+            List<Query> pool = queriesByComponents[poolId];
             if (pool == null)
                 return;
 
@@ -144,10 +145,10 @@ namespace Ecs {
         }
 
         private void UpdateHotQueriesAfterRemovingComponent(int entityId, int poolId) {
-            if (poolId >= queriesByExcludedComponent.Count)
+            if (poolId >= queriesByComponents.Count)
                 return;
 
-            List<Query> pool = queriesByExcludedComponent[poolId];
+            List<Query> pool = queriesByComponents[poolId];
             if (pool == null)
                 return;
 
@@ -169,9 +170,9 @@ namespace Ecs {
         }
 
         public void OnAddComponentToEntity(int entityId, int poolId) {
-            // Update the hot queries.
             entityComponentCounts.Get(entityId) ++;
 
+            // Update the hot queries.
             UpdateHotQueriesAfterAddingComponent(entityId, poolId);
         }
 

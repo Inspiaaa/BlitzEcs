@@ -34,6 +34,7 @@ namespace Ecs {
         // Set of all entities that match the query. The key is the entity id, and the value
         // is not important (bool to save memory).
         protected SparseSet<bool> matchedEntities;
+        public (int[] entityIds, int count) MatchedEntityIds => (matchedEntities.DirectKeys, matchedEntities.Count);
 
         public Query(World world) {
             this.world = world;
@@ -53,16 +54,16 @@ namespace Ecs {
         }
 
         public Query Inc<TComponent>() where TComponent : struct {
-            mask.Inc<TComponent>();
             if (hot)
                 throw new InvalidOperationException("A query's mask cannot be changed after caching.");
+            mask.Inc<TComponent>();
             return this;
         }
 
         public Query Exc<TComponent>() where TComponent : struct {
-            mask.Exc<TComponent>();
             if (hot)
                 throw new InvalidOperationException("A query's mask cannot be changed after caching.");
+            mask.Exc<TComponent>();
             return this;
         }
 
