@@ -10,6 +10,7 @@ namespace Ecs.Tests {
         private class MockEntityManager : IEntityManager {
             public void OnAddComponentToEntity(int entityId, int poolId) { }
             public void OnRemoveComponentFromEntity(int entityId, int poolId) { }
+            public bool ArePoolsLocked => false;
         }
 
         private ComponentPool<int> pool;

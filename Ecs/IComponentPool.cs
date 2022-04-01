@@ -8,6 +8,7 @@ namespace Ecs {
 
         bool Contains(int entityId);
         void Remove(int entityId);
+        void ExecuteBufferedRemoves();
 
         int[] RawEntityIds { get; }
         PoolEntityIdEnumerator EntityIds { get; }

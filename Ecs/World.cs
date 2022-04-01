@@ -21,6 +21,8 @@ namespace Ecs {
         private SparseSet<int> entityComponentCounts;
         public int EntityCount => entityComponentCounts.Count;
 
+        private int activePoolLocks;
+
         public World() {
             componentPoolsByType = new Dictionary<Type, IComponentPool>();
             allComponentPools = new List<IComponentPool>();
@@ -176,5 +178,25 @@ namespace Ecs {
         public int GetComponentCount(Entity entity) => entityComponentCounts.Get(entity.Id);
 
         public bool IsEntityAlive(Entity entity) => entityComponentCounts.Contains(entity.Id);
+
+        public void LockComponentPools() {
+            activePoolLocks ++;
+        }
+
+        public void UnlockComponentPools() {
+            activePoolLocks --;
+
+            if (activePoolLocks < 0) {
+                throw new InvalidOperationException("Invalid component pool lock balance. (Unlocks > locks)");
+            }
+
+            if (activePoolLocks == 0) {
+                foreach (IComponentPool pool in allComponentPools) {
+                    pool.ExecuteBufferedRemoves();
+                }
+            }
+        }
+
+        public bool ArePoolsLocked => activePoolLocks > 0;
     }
 }

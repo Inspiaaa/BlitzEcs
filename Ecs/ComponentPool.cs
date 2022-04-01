@@ -20,6 +20,8 @@ namespace Ecs {
         private int count;
         public int Count => count;
 
+        private SparseSet<bool> entitiesToRemove;
+
         public ComponentPool(IEntityManager world, int poolId) {
             this.world = world;
             this.poolId = poolId;
@@ -28,6 +30,8 @@ namespace Ecs {
             componentIdxToEntityId = new int[1];
             components = new TComponent[1];
             count = 0;
+
+            entitiesToRemove = new SparseSet<bool>();
         }
 
         private int GetComponentIdx(int entityId) {
@@ -71,9 +75,15 @@ namespace Ecs {
             if (! isAlreadyContained) {
                 world.OnAddComponentToEntity(entityId, poolId);
             }
+
+            // If the component is queued to be deleted, but in the meantime we add the component again,
+            // there is no need to remove the new one.
+            if (entitiesToRemove.Contains(entityId)) {
+                entitiesToRemove.Remove(entityId);
+            }
         }
 
-        public void Remove(int entityId) {
+        private void ActuallyRemove(int entityId) {
             if (!Contains(entityId)) {
                 return;
             }
@@ -99,6 +109,24 @@ namespace Ecs {
             world.OnRemoveComponentFromEntity(entityId, poolId);
         }
 
+        public void Remove(int entityId) {
+            if (world.ArePoolsLocked) {
+                entitiesToRemove.Add(entityId);
+            }
+            else {
+                ActuallyRemove(entityId);
+            }
+        }
+
+        public void ExecuteBufferedRemoves() {
+            int[] entityIds = entitiesToRemove.DirectKeys;
+            for (int i = 0, max = entitiesToRemove.Count; i < max; i++ ) {
+                // TODO: If autoPurge, only do the purge after doing all removes.
+                ActuallyRemove(entityIds[i]);
+            }
+            entitiesToRemove.Clear();
+        }
+
         public ref TComponent Get(int entityId) {
             int componentIdx = GetComponentIdx(entityId);
             if (componentIdx == -1) {
@@ -117,6 +145,9 @@ namespace Ecs {
         public int[] RawEntityIds => componentIdxToEntityId;
 
         public void Clear() {
+            for (int entityId = 0; entityId < count; entityId ++) {
+                world.OnRemoveComponentFromEntity(componentIdxToEntityId[entityId], poolId);
+            }
             // Remove any GC references.
             Array.Clear(components, 0, count);
             count = 0;
