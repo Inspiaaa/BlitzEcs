@@ -143,6 +143,36 @@ namespace Ecs {
 
         public TComponent[] RawComponents => components;
         public int[] RawEntityIds => componentIdxToEntityId;
+        public int[] RawEntityIdsToComponentIdx => entityIdToComponentIdx;
+
+        public int HighestEntityId {
+            get {
+                int highestId = 0;
+
+                for (int i = 0; i < count; i ++) {
+                    int entityId = componentIdxToEntityId[i];
+                    if (entityId > highestId) {
+                        highestId = entityId;
+                    }
+                }
+
+                return highestId;
+            }
+        }
+
+        public void SetCountUnsafe(int newCount) => count = newCount;
+
+        public void SetMinCapacity(int maxEntityIdInclusive, int count) {
+            if (maxEntityIdInclusive >= entityIdToComponentIdx.Length) {
+                Array.Resize(ref entityIdToComponentIdx, MathUtil.NextPowerOf2(maxEntityIdInclusive + 1));
+            }
+
+            if (count > this.count) {
+                int newCapacity = MathUtil.NextPowerOf2(count);
+                Array.Resize(ref componentIdxToEntityId, newCapacity);
+                Array.Resize(ref components, newCapacity);
+            }
+        }
 
         public void Clear() {
             for (int entityId = 0; entityId < count; entityId ++) {
@@ -156,15 +186,7 @@ namespace Ecs {
         public void Purge() {
             // Reduces the unnecessary buffer space to save memory.
 
-            int highestEntityId = 0;
-
-            for (int i = 0; i < count; i ++) {
-                int entityId = componentIdxToEntityId[i];
-                if (entityId > highestEntityId) {
-                    highestEntityId = entityId;
-                }
-            }
-
+            int highestEntityId = HighestEntityId;
             if (highestEntityId <= entityIdToComponentIdx.Length / 4) {
                 Array.Resize(ref entityIdToComponentIdx, MathUtil.NextPowerOf2(highestEntityId + 1));
             }

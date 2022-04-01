@@ -130,9 +130,20 @@ namespace Ecs {
             // Find the components.
 
             // Assume that all entities in the smallest pool have all components.
-            foreach (int id in smallestPool.EntityIds) {
-                matchedEntities.Add(id);
-            }
+            // Directly copy the entity id data from the smallest pool to the matchedEntities set.
+
+            int highestEntityId = smallestPool.HighestEntityId;
+            matchedEntities.SetMinCapacity(highestEntityId, smallestCount);
+
+            // Copy the sparse array.
+            Array.Copy(
+                smallestPool.RawEntityIdsToComponentIdx,
+                matchedEntities.DirectKeysToValueIdx,
+                highestEntityId + 1);
+
+            // Copy the dense array. As the values are not important, the dense values / data array needn't be copied.
+            Array.Copy(smallestPool.RawEntityIds, matchedEntities.DirectKeys, smallestCount);
+            matchedEntities.SetCountUnsafe(smallestCount);
 
             // Then go over every individual component type and remove the entities that
             // do not match.

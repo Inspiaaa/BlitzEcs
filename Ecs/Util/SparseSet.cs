@@ -98,8 +98,39 @@ namespace Ecs {
             return ref denseValues[sparse[key]];
         }
 
+        public void SetCountUnsafe(int newCount) => count = newCount;
+
         public T[] DirectValues => denseValues;
         public int[] DirectKeys => dense;
+        public int[] DirectKeysToValueIdx => sparse;
+
+        public int HighestKey {
+            get {
+                int highestKey = 0;
+
+                for (int i = 0; i < count; i ++) {
+                    int key = dense[i];
+                    if (key > highestKey) {
+                        highestKey = key;
+                    }
+                }
+
+                return highestKey;
+            }
+        }
+
+        public void SetMinCapacity(int maxKeyInclusive, int count) {
+            // TODO: Find a better name for this method (as it doesn't actually set the min capacity).
+            if (maxKeyInclusive >= sparse.Length) {
+                Array.Resize(ref sparse, MathUtil.NextPowerOf2(maxKeyInclusive + 1));
+            }
+
+            if (count > this.count) {
+                int newCapacity = MathUtil.NextPowerOf2(count);
+                Array.Resize(ref dense, newCapacity);
+                Array.Resize(ref denseValues, newCapacity);
+            }
+        }
 
         public void Clear() {
             // Remove any GC references.
@@ -110,15 +141,7 @@ namespace Ecs {
         public void Purge() {
             // Reduces the unnecessary buffer space to save memory.
 
-            int highestKey = 0;
-
-            for (int i = 0; i < count; i ++) {
-                int key = sparse[i];
-                if (key > highestKey) {
-                    highestKey = key;
-                }
-            }
-
+            int highestKey = HighestKey;
             if (highestKey <= sparse.Length / 4) {
                 Array.Resize(ref sparse, MathUtil.NextPowerOf2(highestKey + 1));
             }

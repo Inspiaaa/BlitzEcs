@@ -29,10 +29,10 @@ namespace Ecs.Benchmarks {
         }
 
 
-        public class BenchQueryOneComponent : Benchmark {
+        public class BenchQueryForeachOneComponent : Benchmark {
             private World world;
 
-            public BenchQueryOneComponent(int entityCount) {
+            public BenchQueryForeachOneComponent(int entityCount) {
                 world = new World();
 
                 for (int i = 0; i < entityCount; i ++) {
@@ -49,10 +49,50 @@ namespace Ecs.Benchmarks {
             }
         }
 
-        public class BenchQueryTwoComponents : Benchmark {
+        public class BenchQueryFetchOneComponent : Benchmark {
             private World world;
 
-            public BenchQueryTwoComponents(int entityCount) {
+            public BenchQueryFetchOneComponent(int entityCount) {
+                world = new World();
+
+                for (int i = 0; i < entityCount; i ++) {
+                    world.Spawn().Add<Position>();
+                }
+            }
+
+            public void Run(int n) {
+                var query = new Query<Position>(world);
+
+                for (int i = 0; i < n; i ++){
+                    query.Fetch();
+                }
+            }
+        }
+
+        public class BenchParallelQueryForeachOneComponent : Benchmark {
+            private World world;
+
+            public BenchParallelQueryForeachOneComponent(int entityCount) {
+                world = new World();
+
+                for (int i = 0; i < entityCount; i ++) {
+                    world.Spawn().Add<Position>();
+                }
+            }
+
+            public void Run(int n) {
+                var query = new Query<Position>(world);
+
+                for (int i = 0; i < n; i ++){
+                    query.ParallelForEach((Entity e, ref Position pos) => {});
+                }
+            }
+        }
+
+        public class BenchQueryForeachTwoComponents : Benchmark {
+            private World world;
+
+            public BenchQueryForeachTwoComponents(int entityCount) {
                 world = new World();
 
                 for (int i = 0; i < entityCount; i ++) {
@@ -69,10 +109,10 @@ namespace Ecs.Benchmarks {
             }
         }
 
-        public class BenchHotQueryTwoComponents : Benchmark {
+        public class BenchHotQueryForeachTwoComponents : Benchmark {
             private World world;
 
-            public BenchHotQueryTwoComponents(int entityCount) {
+            public BenchHotQueryForeachTwoComponents(int entityCount) {
                 world = new World();
 
                 for (int i = 0; i < entityCount; i ++) {
@@ -98,24 +138,36 @@ namespace Ecs.Benchmarks {
         public IEnumerator RunBenchmarks() {
             yield return null;
 
-            int entityCount = 1000;
+            int entityCount = 10000;
             int iterations = 100;
 
             Benchmark.LogProfile(
-                $"Querying {entityCount} entities with Position",
-                new BenchQueryOneComponent(entityCount).Run, iterations
+                $"Foreach on {entityCount} entities with Position",
+                new BenchQueryForeachOneComponent(entityCount).Run, iterations
             );
             yield return null;
 
             Benchmark.LogProfile(
-                $"Querying {entityCount} entities with Position and Rotation",
-                new BenchQueryTwoComponents(entityCount).Run, iterations
+                $"Query.Fetch for {entityCount} entities with Position",
+                new BenchQueryFetchOneComponent(entityCount).Run, iterations
             );
             yield return null;
 
             Benchmark.LogProfile(
-                $"Querying {entityCount} entities (hot query) with Position and Rotation",
-                new BenchHotQueryTwoComponents(entityCount).Run, iterations
+                $"Foreach on {entityCount} entities (parallel) with Position",
+                new BenchParallelQueryForeachOneComponent(entityCount).Run, iterations
+            );
+            yield return null;
+
+            Benchmark.LogProfile(
+                $"Foreach on {entityCount} entities with Position and Rotation",
+                new BenchQueryForeachTwoComponents(entityCount).Run, iterations
+            );
+            yield return null;
+
+            Benchmark.LogProfile(
+                $"Foreach on {entityCount} entities (hot query) with Position and Rotation",
+                new BenchHotQueryForeachTwoComponents(entityCount).Run, iterations
             );
             yield return null;
         }
