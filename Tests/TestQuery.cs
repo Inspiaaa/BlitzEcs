@@ -80,6 +80,23 @@ namespace Ecs.Tests {
         }
 
         [Test]
+        public void Test_fetching_multiple_times_does_the_same() {
+            int e0 = world.Spawn().Add<int>();
+            int e1 = world.Spawn().Add<int>().Add<bool>();
+            int e2 = world.Spawn().Add<int>();
+
+            var query = new Query(world).Inc<int>().Exc<bool>();
+            query.Fetch();
+            query.Fetch();
+            query.Fetch();
+
+            (int[] ids, int count) = query.MatchedEntityIds;
+            Assert.AreEqual(2, count);
+            Assert.AreEqual(e0, ids[0]);
+            Assert.AreEqual(e2, ids[2]);
+        }
+
+        [Test]
         public void Test_hot_query_starts_with_all_matched_entities() {
             int e0 = world.Spawn().Add<int>();
             int e1 = world.Spawn().Add<int>().Add<bool>();
@@ -121,6 +138,37 @@ namespace Ecs.Tests {
             (int[] ids, int count) = query.MatchedEntityIds;
             Assert.AreEqual(1, count);
             Assert.AreEqual(e2.Id, ids[0]);
+        }
+
+        [Test]
+        public void Test_components_are_not_removed_during_iteration() {
+            Entity e0 = world.Spawn().Add<int>();
+            Entity e1 = world.Spawn().Add<int>();
+            Entity e2 = world.Spawn().Add<int>();
+
+            var query = new Query<int>(world);
+
+            query.ForEach( (Entity e, ref int component) => {
+                e.Remove<int>();
+                Assert.True(e.Has<int>());
+            });
+        }
+
+        [Test]
+        public void Test_components_are_removed_after_iteration() {
+            Entity e0 = world.Spawn().Add<int>().Add<bool>();
+            Entity e1 = world.Spawn().Add<int>().Add<bool>();
+            Entity e2 = world.Spawn().Add<int>().Add<bool>();
+
+            var query = new Query<int>(world);
+
+            query.ForEach( (Entity e, ref int component) => {
+                e.Remove<int>();
+            });
+
+            Assert.False(e0.Has<int>());
+            Assert.False(e1.Has<int>());
+            Assert.False(e2.Has<int>());
         }
     }
 }

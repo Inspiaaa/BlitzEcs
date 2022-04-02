@@ -1,6 +1,6 @@
 - [x] world.ForEach( (Entity e, ref Position a, ...))
 - [x] Queries
-- [ ] Masks
+- [x] Masks
 - [x] Entity manager in World
 - [x] Keep track of how many components an entity has and automatically despawn when the count hits 0
 - [x] Add excludes to queries
