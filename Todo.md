@@ -13,3 +13,5 @@
 - [x] Add entity to hot queries on component add
 - [x] Cache queries by their mask
 - [ ] Add min capacity to sparse sets
+- [ ] Add custom destroy handlers for components
+- [ ] Remove dependency on unity
