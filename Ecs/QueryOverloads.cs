@@ -11,37 +11,46 @@ namespace Ecs {
             Inc<C1>();
         }
 
-        public delegate void ForEachAction(Entity e, ref C1 c1);
+        public delegate void RefAction(ref C1 c1);
+        public delegate void EntityRefAction(Entity e, ref C1 c1);
 
-        public void ForEach(ForEachAction action) {
+        public void ForEach(RefAction action) {
             if (! hot) Fetch();
 
-            // TODO: Wrap in try finanally block to ensure that world.Unlock... is called.
-            world.LockComponentPools();
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
-            foreach (int id in matchedEntities.Keys) {
-                action(
-                    new Entity(world, id),
-                    ref pool1.GetUnsafe(id));
+
+            world.LockComponentPools();
+            try {
+                foreach (int id in matchedEntities.Keys) {
+                    action(
+                        ref pool1.GetUnsafe(id));
+                }
             }
-            world.UnlockComponentPools();
+            finally {
+                world.UnlockComponentPools();
+            }
         }
 
-        public void ParallelForEach(ForEachAction action) {
+        public void ForEach(EntityRefAction action) {
             if (! hot) Fetch();
 
-            // var partitioner = Partitioner.Create(0, matchedEntities.Count-1);
-            // ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
+            ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
 
-            // Parallel.ForEach(partitioner, range => {
-            //     (int start, int end) = range;
+            world.LockComponentPools();
+            try {
+                foreach (int id in matchedEntities.Keys) {
+                    action(
+                        new Entity(world, id),
+                        ref pool1.GetUnsafe(id));
+                }
+            }
+            finally {
+                world.UnlockComponentPools();
+            }
+        }
 
-            //     for (int id = start; id < end; id++) {
-            //         action(
-            //         new Entity(world, id),
-            //         ref pool1.GetUnsafe(id));
-            //     }
-            // });
+        public void ParallelForEach(EntityRefAction action) {
+            if (! hot) Fetch();
 
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
 
@@ -74,21 +83,46 @@ namespace Ecs {
             Inc<C2>();
         }
 
-        public delegate void ForEachAction(Entity e, ref C1 c1, ref C2 c2);
+        public delegate void RefAction(ref C1 c1, ref C2 c2);
+        public delegate void EntityRefAction(Entity e, ref C1 c1, ref C2 c2);
 
-        public void ForEach(ForEachAction action) {
+        public void ForEach(RefAction action) {
             if (! hot) Fetch();
 
-            world.LockComponentPools();
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
             ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
-            foreach (int id in matchedEntities.Keys) {
-                action(
-                    new Entity(world, id),
-                ref pool1.GetUnsafe(id),
-                ref pool2.GetUnsafe(id));
+
+            world.LockComponentPools();
+            try {
+                foreach (int id in matchedEntities.Keys) {
+                    action(
+                        ref pool1.GetUnsafe(id),
+                        ref pool2.GetUnsafe(id));
+                }
             }
-            world.UnlockComponentPools();
+            finally {
+                world.UnlockComponentPools();
+            }
+        }
+
+        public void ForEach(EntityRefAction action) {
+            if (! hot) Fetch();
+
+            ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
+            ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
+
+            world.LockComponentPools();
+            try {
+                foreach (int id in matchedEntities.Keys) {
+                    action(
+                        new Entity(world, id),
+                        ref pool1.GetUnsafe(id),
+                        ref pool2.GetUnsafe(id));
+                }
+            }
+            finally {
+                world.UnlockComponentPools();
+            }
         }
     }
 
@@ -103,23 +137,50 @@ namespace Ecs {
             Inc<C3>();
         }
 
-        public delegate void ForEachAction(Entity e, ref C1 c1, ref C2 c2, ref C3 c3);
+        public delegate void RefAction(ref C1 c1, ref C2 c2, ref C3 c3);
+        public delegate void EntityRefAction(Entity e, ref C1 c1, ref C2 c2, ref C3 c3);
 
-        public void ForEach(ForEachAction action) {
+        public void ForEach(RefAction action) {
             if (! hot) Fetch();
 
-            world.LockComponentPools();
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
             ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
             ComponentPool<C3> pool3 = world.GetComponentPool<C3>();
-            foreach (int id in matchedEntities.Keys) {
-                action(
-                    new Entity(world, id),
-                    ref pool1.GetUnsafe(id),
-                    ref pool2.GetUnsafe(id),
-                    ref pool3.GetUnsafe(id));
+
+            world.LockComponentPools();
+            try {
+                foreach (int id in matchedEntities.Keys) {
+                    action(
+                        ref pool1.GetUnsafe(id),
+                        ref pool2.GetUnsafe(id),
+                        ref pool3.GetUnsafe(id));
+                }
             }
-            world.UnlockComponentPools();
+            finally {
+                world.UnlockComponentPools();
+            }
+        }
+
+        public void ForEach(EntityRefAction action) {
+            if (! hot) Fetch();
+
+            ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
+            ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
+            ComponentPool<C3> pool3 = world.GetComponentPool<C3>();
+
+            world.LockComponentPools();
+            try {
+                foreach (int id in matchedEntities.Keys) {
+                    action(
+                        new Entity(world, id),
+                        ref pool1.GetUnsafe(id),
+                        ref pool2.GetUnsafe(id),
+                        ref pool3.GetUnsafe(id));
+                }
+            }
+            finally {
+                world.UnlockComponentPools();
+            }
         }
     }
 
@@ -136,25 +197,54 @@ namespace Ecs {
             Inc<C4>();
         }
 
-        public delegate void ForEachAction(Entity e, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4);
+        public delegate void RefAction(ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4);
+        public delegate void EntityRefAction(Entity e, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4);
 
-        public void ForEach(ForEachAction action) {
+        public void ForEach(RefAction action) {
             if (! hot) Fetch();
 
-            world.LockComponentPools();
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
             ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
             ComponentPool<C3> pool3 = world.GetComponentPool<C3>();
             ComponentPool<C4> pool4 = world.GetComponentPool<C4>();
-            foreach (int id in matchedEntities.Keys) {
-                action(
-                    new Entity(world, id),
-                    ref pool1.GetUnsafe(id),
-                    ref pool2.GetUnsafe(id),
-                    ref pool3.GetUnsafe(id),
-                    ref pool4.GetUnsafe(id));
+
+            world.LockComponentPools();
+            try {
+                foreach (int id in matchedEntities.Keys) {
+                    action(
+                        ref pool1.GetUnsafe(id),
+                        ref pool2.GetUnsafe(id),
+                        ref pool3.GetUnsafe(id),
+                        ref pool4.GetUnsafe(id));
+                }
             }
-            world.UnlockComponentPools();
+            finally {
+                world.UnlockComponentPools();
+            }
+        }
+
+        public void ForEach(EntityRefAction action) {
+            if (! hot) Fetch();
+
+            ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
+            ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
+            ComponentPool<C3> pool3 = world.GetComponentPool<C3>();
+            ComponentPool<C4> pool4 = world.GetComponentPool<C4>();
+
+            world.LockComponentPools();
+            try {
+                foreach (int id in matchedEntities.Keys) {
+                    action(
+                        new Entity(world, id),
+                        ref pool1.GetUnsafe(id),
+                        ref pool2.GetUnsafe(id),
+                        ref pool3.GetUnsafe(id),
+                        ref pool4.GetUnsafe(id));
+                }
+            }
+            finally {
+                world.UnlockComponentPools();
+            }
         }
     }
 
@@ -173,27 +263,58 @@ namespace Ecs {
             Inc<C5>();
         }
 
-        public delegate void ForEachAction(Entity e, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5);
+        public delegate void RefAction(ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5);
+        public delegate void EntityRefAction(Entity e, ref C1 c1, ref C2 c2, ref C3 c3, ref C4 c4, ref C5 c5);
 
-        public void ForEach(ForEachAction action) {
+        public void ForEach(RefAction action) {
             if (! hot) Fetch();
 
-            world.LockComponentPools();
             ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
             ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
             ComponentPool<C3> pool3 = world.GetComponentPool<C3>();
             ComponentPool<C4> pool4 = world.GetComponentPool<C4>();
             ComponentPool<C5> pool5 = world.GetComponentPool<C5>();
-            foreach (int id in matchedEntities.Keys) {
-                action(
-                    new Entity(world, id),
-                    ref pool1.GetUnsafe(id),
-                    ref pool2.GetUnsafe(id),
-                    ref pool3.GetUnsafe(id),
-                    ref pool4.GetUnsafe(id),
-                    ref pool5.GetUnsafe(id));
+
+            world.LockComponentPools();
+            try {
+                foreach (int id in matchedEntities.Keys) {
+                    action(
+                        ref pool1.GetUnsafe(id),
+                        ref pool2.GetUnsafe(id),
+                        ref pool3.GetUnsafe(id),
+                        ref pool4.GetUnsafe(id),
+                        ref pool5.GetUnsafe(id));
+                }
             }
-            world.UnlockComponentPools();
+            finally {
+                world.UnlockComponentPools();
+            }
+        }
+
+        public void ForEach(EntityRefAction action) {
+            if (! hot) Fetch();
+
+            ComponentPool<C1> pool1 = world.GetComponentPool<C1>();
+            ComponentPool<C2> pool2 = world.GetComponentPool<C2>();
+            ComponentPool<C3> pool3 = world.GetComponentPool<C3>();
+            ComponentPool<C4> pool4 = world.GetComponentPool<C4>();
+            ComponentPool<C5> pool5 = world.GetComponentPool<C5>();
+
+            world.LockComponentPools();
+            try {
+                foreach (int id in matchedEntities.Keys) {
+                    action(
+                        new Entity(world, id),
+                        ref pool1.GetUnsafe(id),
+                        ref pool2.GetUnsafe(id),
+                        ref pool3.GetUnsafe(id),
+                        ref pool4.GetUnsafe(id),
+                        ref pool5.GetUnsafe(id));
+                }
+            }
+            finally {
+                world.UnlockComponentPools();
+            }
         }
     }
 }
