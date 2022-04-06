@@ -94,14 +94,21 @@ namespace BlitzEcs {
             return new Entity(this, id);
         }
 
+        private void RecycleEntity(int entityId) {
+            entityComponentCounts.Remove(entityId);
+            recycledEntities.Push(entityId);
+        }
+
         public void Despawn(Entity entity) => Despawn(entity.Id);
 
         public void Despawn(int entityId) {
+            // Removes all components from the entity. When the component count finally
+            // hits 0, the entity will be removed.
+            // If the pools are locked, the entity will therefore only be deleted once the
+            // pools have been unlocked.
             foreach (IComponentPool pool in componentPoolsByType.Values) {
                 pool.Remove(entityId);
             }
-            entityComponentCounts.Remove(entityId);
-            recycledEntities.Push(entityId);
         }
 
         public ComponentPool<TComponent> GetComponentPool<TComponent>() where TComponent : struct {
@@ -162,7 +169,7 @@ namespace BlitzEcs {
 
             // Despawn when the entity has no components left.
             if (count <= 0) {
-                Despawn(entityId);
+                RecycleEntity(entityId);
             }
 
             UpdateHotQueriesAfterRemovingComponent(entityId, poolId);
