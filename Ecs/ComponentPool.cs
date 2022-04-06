@@ -57,7 +57,7 @@ namespace BlitzEcs {
             int componentIdx = count;
 
             if (componentIdx >= components.Length) {
-                int newCapacity = 2 * components.Length;
+                int newCapacity = MathUtil.NextPowerOf2(componentIdx + 1);
                 Array.Resize(ref components, newCapacity);
                 Array.Resize(ref componentIdxToEntityId, newCapacity);
             }
@@ -193,7 +193,7 @@ namespace BlitzEcs {
 
             if (count <= components.Length / 4) {
                 int newCapacity = MathUtil.NextPowerOf2(count);
-                Array.Resize(ref entityIdToComponentIdx, newCapacity);
+                Array.Resize(ref componentIdxToEntityId, newCapacity);
                 Array.Resize(ref components, newCapacity);
             }
         }

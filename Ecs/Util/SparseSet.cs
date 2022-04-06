@@ -43,7 +43,7 @@ namespace BlitzEcs {
             int valueIdx = count;
 
             if (valueIdx >= denseValues.Length) {
-                int newCapacity = 2 * denseValues.Length;
+                int newCapacity = MathUtil.NextPowerOf2(valueIdx + 1);
                 Array.Resize(ref denseValues, newCapacity);
                 Array.Resize(ref dense, newCapacity);
             }
