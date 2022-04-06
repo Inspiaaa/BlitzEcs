@@ -36,6 +36,10 @@ namespace BlitzEcs {
             return world.GetComponentPool<TComponent>().Contains(id);
         }
 
+        public void Despawn() {
+            world.Despawn(id);
+        }
+
         public static implicit operator int(Entity e) => e.id;
     }
 }
