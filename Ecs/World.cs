@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace Ecs {
+namespace BlitzEcs {
     public class World : IEntityManager {
         private Dictionary<Type, IComponentPool> componentPoolsByType;
         private List<IComponentPool> allComponentPools;

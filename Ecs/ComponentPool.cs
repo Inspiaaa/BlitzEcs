@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace Ecs {
+namespace BlitzEcs {
     public class ComponentPool<TComponent> : IComponentPool where TComponent : struct {
         // Uses a sparse set to map the entity IDs to the components.
 
@@ -103,7 +103,7 @@ namespace Ecs {
             count --;
 
             if (count <= components.Length / 4) {
-                Purge();
+                Shrink();
             }
 
             world.OnRemoveComponentFromEntity(entityId, poolId);
@@ -183,7 +183,7 @@ namespace Ecs {
             count = 0;
         }
 
-        public void Purge() {
+        public void Shrink() {
             // Reduces the unnecessary buffer space to save memory.
 
             int highestEntityId = HighestEntityId;

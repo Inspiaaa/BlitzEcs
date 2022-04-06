@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
 
-namespace Ecs.Benchmarks {
+namespace BlitzEcs.Benchmarks {
     public class Benchmark {
         public static double Profile(Action<int> action, int iterations) {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;

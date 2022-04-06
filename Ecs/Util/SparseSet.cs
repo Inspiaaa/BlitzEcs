@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace Ecs {
+namespace BlitzEcs {
     public class SparseSet<T> {
         private int[] sparse;
         private int[] dense;
@@ -12,10 +12,10 @@ namespace Ecs {
         private int count;
         public int Count => count;
 
-        public bool AutoPurge;
+        public bool AutoShrink;
 
         public SparseSet(bool autoPurge = true) {
-            this.AutoPurge = autoPurge;
+            this.AutoShrink = autoPurge;
 
             sparse = new int[1];
             dense = new int[1];
@@ -78,8 +78,8 @@ namespace Ecs {
 
             count --;
 
-            if (AutoPurge && count <= dense.Length / 4) {
-                Purge();
+            if (AutoShrink && count <= dense.Length / 4) {
+                Shrink();
             }
         }
 
@@ -137,7 +137,7 @@ namespace Ecs {
             count = 0;
         }
 
-        public void Purge() {
+        public void Shrink() {
             // Reduces the unnecessary buffer space to save memory.
 
             int highestKey = HighestKey;

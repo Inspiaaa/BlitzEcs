@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Ecs {
+namespace BlitzEcs {
     public interface IComponentPool {
         int Count { get; }
         int PoolId { get; }

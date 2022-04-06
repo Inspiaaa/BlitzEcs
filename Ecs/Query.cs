@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace Ecs {
+namespace BlitzEcs {
     public class Query {
         public struct Enumerator {
             private Query query;
@@ -40,7 +40,7 @@ namespace Ecs {
 
             mask = new Mask(world);
             matchedEntities = new SparseSet<bool>();
-            matchedEntities.AutoPurge = false;
+            matchedEntities.AutoShrink = false;
         }
 
         internal void OnCache() {
@@ -49,7 +49,7 @@ namespace Ecs {
 
             Fetch();
             hot = true;
-            matchedEntities.AutoPurge = true;
+            matchedEntities.AutoShrink = true;
         }
 
         public Query Inc<TComponent>() where TComponent : struct {
@@ -182,7 +182,7 @@ namespace Ecs {
                 }
             }
 
-            matchedEntities.Purge();
+            matchedEntities.Shrink();
         }
 
         public Enumerator GetEnumerator() => new Enumerator(this);

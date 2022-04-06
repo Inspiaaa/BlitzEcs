@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using Ecs;
+using BlitzEcs;
 using System;
 
-namespace Ecs.Tests {
+namespace BlitzEcs.Tests {
     public class TestComponentPool {
         private class MockEntityManager : IEntityManager {
             public void OnAddComponentToEntity(int entityId, int poolId) { }

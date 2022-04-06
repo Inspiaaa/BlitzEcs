@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace Ecs {
+namespace BlitzEcs {
     public static class MathUtil {
         public static int NextPowerOf2(int num) {
             if (num == 0)

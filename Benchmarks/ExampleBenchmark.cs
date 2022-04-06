@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace Ecs.Benchmarks {
+namespace BlitzEcs.Benchmarks {
     public class ExampleBenchmark : MonoBehaviour
     {
         public struct Position {

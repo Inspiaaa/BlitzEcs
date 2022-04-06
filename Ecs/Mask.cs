@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace Ecs {
+namespace BlitzEcs {
     public class Mask : IEquatable<Mask> {
         private World world;
         internal List<int> componentsToInclude;

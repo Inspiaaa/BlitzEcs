@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 
-namespace Ecs {
+namespace BlitzEcs {
     public class Query<C1> : Query
         where C1 : struct {
 

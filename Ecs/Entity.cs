@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Ecs {
+namespace BlitzEcs {
     public struct Entity {
         private int id;
         private World world;
