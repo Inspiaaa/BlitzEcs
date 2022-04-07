@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+using BlitzEcs.Util;
+
 namespace BlitzEcs {
     public class World : IEntityManager {
         private Dictionary<Type, IComponentPool> componentPoolsByType;

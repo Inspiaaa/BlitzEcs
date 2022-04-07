@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace BlitzEcs {
+namespace BlitzEcs.Util {
     public class SparseSet<T> {
         private int[] sparse;
         private int[] dense;

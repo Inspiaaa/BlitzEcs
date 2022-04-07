@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+using BlitzEcs.Util;
+
 namespace BlitzEcs {
     public class ComponentPool<TComponent> : IComponentPool where TComponent : struct {
         // Uses a sparse set to map the entity IDs to the components.

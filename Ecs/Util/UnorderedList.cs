@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace BlitzEcs {
+namespace BlitzEcs.Util {
     public class UnorderedList<T> {
         private T[] values;
         private int count;
