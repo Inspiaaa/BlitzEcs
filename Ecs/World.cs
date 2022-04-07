@@ -21,6 +21,9 @@ namespace BlitzEcs {
 
         private int activePoolLocks;
 
+        // TODO: Use a priority queue to store the recycled entity ids (OR: just do a linear search for the next smallest one
+        // in the sparse field of the sparse set)
+
         public World() {
             componentPoolsByType = new Dictionary<Type, IComponentPool>();
             allComponentPools = new List<IComponentPool>();
@@ -102,6 +105,14 @@ namespace BlitzEcs {
         public void Despawn(Entity entity) => Despawn(entity.Id);
 
         public void Despawn(int entityId) {
+            int componentCount = entityComponentCounts.Get(entityId);
+
+            // If the entity has no components, it can be removed instantly.
+            if (componentCount == 0) {
+                RecycleEntity(entityId);
+                return;
+            }
+
             // Removes all components from the entity. When the component count finally
             // hits 0, the entity will be removed.
             // If the pools are locked, the entity will therefore only be deleted once the

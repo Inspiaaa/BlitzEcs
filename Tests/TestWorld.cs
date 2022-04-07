@@ -45,6 +45,19 @@ namespace BlitzEcs.Tests {
         }
 
         [Test]
+        public void Test_spawn_should_always_recycle_smallest_entity_id_first() {
+            Entity e0 = world.Spawn();
+            Entity e1 = world.Spawn();
+            Entity e2 = world.Spawn();
+            e2.Despawn();
+            e0.Despawn();
+            e1.Despawn();
+
+            Entity newE = world.Spawn();
+            Assert.AreEqual(0, newE.Id);
+        }
+
+        [Test]
         public void Test_GetComponentPool_should_create_new_pool() {
             ComponentPool<int> pool = world.GetComponentPool<int>();
             Assert.NotNull(pool);
@@ -94,6 +107,27 @@ namespace BlitzEcs.Tests {
             entity.Add<int>();
             entity.Remove<int>();
             Assert.False(world.IsEntityAlive(entity));
+        }
+
+        [Test]
+        public void Test_Despawn_removes_entity_with_component_once_pools_are_unlocked() {
+            Entity e = world.Spawn();
+            e.Add<int>();
+
+            world.LockComponentPools();
+
+            e.Despawn();
+            Assert.True(world.IsEntityAlive(e));
+
+            world.UnlockComponentPools();
+            Assert.False(world.IsEntityAlive(e));
+        }
+
+        [Test]
+        public void Test_Despawn_removes_empty_entity_instantly() {
+            Entity e = world.Spawn();
+            e.Despawn();
+            Assert.False(world.IsEntityAlive(e));
         }
     }
 }
