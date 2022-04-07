@@ -1,0 +1,133 @@
+using System.Collections;
+using System.Collections.Generic;
+using System;
+using System.Threading.Tasks;
+
+// This code was automatically generated from a template.
+// Manual changes will be overwritten when the code is regenerated.
+
+namespace BlitzEcs {
+    {% for count in range(1, max_component_count + 1) -%}
+    {% set components = get_component_names(count) -%}
+
+    public class Query<{{ components | join(", ") }}> : Query
+        {%- for comp in components %}
+        where {{ comp }} : struct
+        {%- endfor %} {
+
+        public Query(World world) : base(world) {
+            {%- for comp in components %}
+            Inc<{{ comp }}>();
+            {%- endfor %}
+        }
+
+        public delegate void RefAction(
+            {%- for comp in components %}
+            ref {{ comp }} c{{ loop.index }} {{- "," if not loop.last }}
+            {%- endfor -%}
+        );
+
+        public delegate void EntityRefAction(
+            Entity e,
+            {%- for comp in components %}
+            ref {{ comp }} c{{ loop.index }} {{- "," if not loop.last }}
+            {%- endfor -%}
+        );
+
+        public void ForEach(RefAction action) {
+            if (! hot) Fetch();
+
+            {% for comp in components -%}
+            var pool{{ loop.index }} = world.GetComponentPool<{{ comp }}>();
+            {% endfor %}
+            world.LockComponentPools();
+            try {
+                foreach (int id in matchedEntities.Keys) {
+                    action(
+                        {%- for comp in components %}
+                        ref pool{{ loop.index }}.GetUnsafe(id) {{- "," if not loop.last }}
+                        {%- endfor -%}
+                    );
+                }
+            }
+            finally {
+                world.UnlockComponentPools();
+            }
+        }
+
+        public void ForEach(EntityRefAction action) {
+            if (! hot) Fetch();
+
+            {% for comp in components -%}
+            var pool{{ loop.index }} = world.GetComponentPool<{{ comp }}>();
+            {% endfor %}
+            world.LockComponentPools();
+            try {
+                foreach (int id in matchedEntities.Keys) {
+                    action(
+                        new Entity(world, id),
+                        {%- for comp in components %}
+                        ref pool{{ loop.index }}.GetUnsafe(id) {{- "," if not loop.last }}
+                        {%- endfor -%}
+                    );
+                }
+            }
+            finally {
+                world.UnlockComponentPools();
+            }
+        }
+
+        public void ParallelForEach(RefAction action, int chunkSize=64) {
+            if (! hot) Fetch();
+
+            {% for comp in components -%}
+            var pool{{ loop.index }} = world.GetComponentPool<{{ comp }}>();
+            {% endfor %}
+            int count = matchedEntities.Count;
+            int chunkCount = MathUtil.CeilDivision(count, chunkSize);
+
+            world.LockComponentPools();
+            Parallel.For(0, chunkCount - 1, chunkNum => {
+                int start = chunkNum * chunkSize;
+                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+
+                for (int id = start; id < end; id++) {
+                    action(
+                        {%- for comp in components %}
+                        ref pool{{ loop.index }}.GetUnsafe(id) {{- "," if not loop.last }}
+                        {%- endfor -%}
+                    );
+                }
+            });
+            world.UnlockComponentPools();
+        }
+
+        public void ParallelForEach(EntityRefAction action, int chunkSize=64) {
+            if (! hot) Fetch();
+
+            {% for comp in components -%}
+            var pool{{ loop.index }} = world.GetComponentPool<{{ comp }}>();
+            {% endfor %}
+            int count = matchedEntities.Count;
+            int chunkCount = MathUtil.CeilDivision(count, chunkSize);
+
+            world.LockComponentPools();
+            Parallel.For(0, chunkCount - 1, chunkNum => {
+                int start = chunkNum * chunkSize;
+                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+
+                for (int id = start; id < end; id++) {
+                    action(
+                        new Entity(world, id),
+                        {%- for comp in components %}
+                        ref pool{{ loop.index }}.GetUnsafe(id) {{- "," if not loop.last }}
+                        {%- endfor -%}
+                    );
+                }
+            });
+            world.UnlockComponentPools();
+        }
+    }
+
+{% endfor -%}
+}

@@ -15,5 +15,9 @@ namespace BlitzEcs {
 
             return pow;
         }
+
+        public static int CeilDivision(int numerator, int denominator) {
+            return (numerator + denominator - 1) / denominator;
+        }
     }
 }
