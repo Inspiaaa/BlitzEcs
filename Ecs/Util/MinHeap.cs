@@ -31,7 +31,7 @@ namespace BlitzEcs.Util {
         private bool HasParent(int childIndex) => GetParentIndex(childIndex) >= 0;
 
         private int GetLeftChild(int parentIndex) => elements[GetLeftChildIndex(parentIndex)];
-        private int GetRightChild(int parentIndex) => elements[GetRightChild(parentIndex)];
+        private int GetRightChild(int parentIndex) => elements[GetRightChildIndex(parentIndex)];
         private int GetParent(int childIndex) => elements[GetParentIndex(childIndex)];
 
         private void Swap(int indexA, int indexB) {
