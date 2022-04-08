@@ -14,4 +14,5 @@
 - [x] Cache queries by their mask
 - [ ] Add min capacity to sparse sets
 - [ ] Add custom destroy handlers for components
-- [ ] Remove dependency on unity
+- [x] Remove dependency on unity
+- [ ] Move properties to the top of the file in ComponentPool.cs and SparseSet.cs

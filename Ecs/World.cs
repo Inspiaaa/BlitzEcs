@@ -13,7 +13,7 @@ namespace BlitzEcs {
         private List<List<Query>> queriesByComponents;
         private Dictionary<Mask, Query> cachedQueriesByMask;
 
-        private Stack<int> recycledEntities;
+        private MinHeap recycledEntities;
         private int maxEntityCount;
 
         // Maps the entity id to its component count. Also useful for checking which entities
@@ -23,14 +23,11 @@ namespace BlitzEcs {
 
         private int activePoolLocks;
 
-        // TODO: Use a priority queue to store the recycled entity ids (OR: just do a linear search for the next smallest one
-        // in the sparse field of the sparse set)
-
         public World() {
             componentPoolsByType = new Dictionary<Type, IComponentPool>();
             allComponentPools = new List<IComponentPool>();
 
-            recycledEntities = new Stack<int>();
+            recycledEntities = new MinHeap();
             maxEntityCount = 0;
 
             entityComponentCounts = new SparseSet<int>();
