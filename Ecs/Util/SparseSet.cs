@@ -14,6 +14,13 @@ namespace BlitzEcs.Util {
 
         public bool AutoShrink;
 
+        public T[] DirectValues => denseValues;
+        public int[] DirectKeys => dense;
+        public int[] DirectKeysToValueIdx => sparse;
+
+        public KeyEnumerator Keys => new KeyEnumerator(this);
+        public ValueEnumerator Values => new ValueEnumerator(this);
+
         public SparseSet(bool autoPurge = true) {
             this.AutoShrink = autoPurge;
 
@@ -99,10 +106,6 @@ namespace BlitzEcs.Util {
 
         public void SetCountUnsafe(int newCount) => count = newCount;
 
-        public T[] DirectValues => denseValues;
-        public int[] DirectKeys => dense;
-        public int[] DirectKeysToValueIdx => sparse;
-
         public int HighestKey {
             get {
                 int highestKey = 0;
@@ -151,9 +154,6 @@ namespace BlitzEcs.Util {
                 Array.Resize(ref denseValues, newCapacity);
             }
         }
-
-        public KeyEnumerator Keys => new KeyEnumerator(this);
-        public ValueEnumerator Values => new ValueEnumerator(this);
 
         public struct KeyEnumerator {
             private int idx;

@@ -24,6 +24,13 @@ namespace BlitzEcs {
 
         private SparseSet<bool> entitiesToRemove;
 
+        public TComponent[] RawComponents => components;
+        public int[] RawEntityIds => componentIdxToEntityId;
+        public int[] RawEntityIdsToComponentIdx => entityIdToComponentIdx;
+
+        public PoolEntityIdEnumerator EntityIds => new PoolEntityIdEnumerator(this);
+        public ComponentEnumerator Components => new ComponentEnumerator(this);
+
         public ComponentPool(IEntityManager world, int poolId) {
             this.world = world;
             this.poolId = poolId;
@@ -143,10 +150,6 @@ namespace BlitzEcs {
             return ref components[entityIdToComponentIdx[entityId]];
         }
 
-        public TComponent[] RawComponents => components;
-        public int[] RawEntityIds => componentIdxToEntityId;
-        public int[] RawEntityIdsToComponentIdx => entityIdToComponentIdx;
-
         public int HighestEntityId {
             get {
                 int highestId = 0;
@@ -199,9 +202,6 @@ namespace BlitzEcs {
                 Array.Resize(ref components, newCapacity);
             }
         }
-
-        public PoolEntityIdEnumerator EntityIds => new PoolEntityIdEnumerator(this);
-        public ComponentEnumerator Components => new ComponentEnumerator(this);
 
         public struct ComponentEnumerator {
             private int idx;

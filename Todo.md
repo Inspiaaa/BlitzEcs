@@ -15,4 +15,4 @@
 - [ ] Add min capacity to sparse sets
 - [ ] Add custom destroy handlers for components
 - [x] Remove dependency on unity
-- [ ] Move properties to the top of the file in ComponentPool.cs and SparseSet.cs
+- [x] Move properties to the top of the file in ComponentPool.cs and SparseSet.cs
