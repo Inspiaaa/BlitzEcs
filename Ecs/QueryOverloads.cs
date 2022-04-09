@@ -9,6 +9,7 @@ using BlitzEcs.Util;
 // Manual changes will be overwritten when the code is regenerated.
 
 namespace BlitzEcs {
+
     public class Query<C1> : Query
         where C1 : struct {
 
@@ -102,7 +103,8 @@ namespace BlitzEcs {
         }
     }
 
-public class Query<C1, C2> : Query
+
+    public class Query<C1, C2> : Query
         where C1 : struct
         where C2 : struct {
 
@@ -207,7 +209,8 @@ public class Query<C1, C2> : Query
         }
     }
 
-public class Query<C1, C2, C3> : Query
+
+    public class Query<C1, C2, C3> : Query
         where C1 : struct
         where C2 : struct
         where C3 : struct {
@@ -324,7 +327,8 @@ public class Query<C1, C2, C3> : Query
         }
     }
 
-public class Query<C1, C2, C3, C4> : Query
+
+    public class Query<C1, C2, C3, C4> : Query
         where C1 : struct
         where C2 : struct
         where C3 : struct
@@ -453,7 +457,8 @@ public class Query<C1, C2, C3, C4> : Query
         }
     }
 
-public class Query<C1, C2, C3, C4, C5> : Query
+
+    public class Query<C1, C2, C3, C4, C5> : Query
         where C1 : struct
         where C2 : struct
         where C3 : struct

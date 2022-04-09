@@ -9,7 +9,7 @@ using BlitzEcs.Util;
 // Manual changes will be overwritten when the code is regenerated.
 
 namespace BlitzEcs {
-    {% for count in range(1, max_component_count + 1) -%}
+    {% for count in range(1, max_component_count + 1) %}
     {% set components = get_component_names(count) -%}
 
     public class Query<{{ components | join(", ") }}> : Query
