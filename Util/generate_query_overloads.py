@@ -10,7 +10,7 @@ from jinja2 import Environment, FileSystemLoader
 import os
 
 
-MAX_COMPONENT_COUNT = 5
+MAX_COMPONENT_COUNT = 8
 
 
 def get_component_names(count):
