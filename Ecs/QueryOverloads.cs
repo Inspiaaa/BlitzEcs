@@ -64,15 +64,18 @@ namespace BlitzEcs {
 
             var pool1 = world.GetComponentPool<C1>();
 
+            int[] entityIds = matchedEntities.DirectKeys;
+
             int count = matchedEntities.Count;
             int chunkCount = MathUtil.CeilDivision(count, chunkSize);
 
             world.LockComponentPools();
-            Parallel.For(0, chunkCount - 1, chunkNum => {
-                int start = chunkNum * chunkSize;
-                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+            Parallel.For(0, chunkCount, chunkIdx => {
+                int start = chunkIdx * chunkSize;
+                int end = (chunkIdx == chunkCount - 1) ? count : (chunkIdx + 1) * chunkSize;
 
-                for (int id = start; id < end; id++) {
+                for (int entityIdx = start; entityIdx < end; entityIdx++) {
+                    int id = entityIds[entityIdx];
                     action(
                         ref pool1.GetUnsafe(id));
                 }
@@ -85,15 +88,18 @@ namespace BlitzEcs {
 
             var pool1 = world.GetComponentPool<C1>();
 
+            int[] entityIds = matchedEntities.DirectKeys;
+
             int count = matchedEntities.Count;
             int chunkCount = MathUtil.CeilDivision(count, chunkSize);
 
             world.LockComponentPools();
-            Parallel.For(0, chunkCount - 1, chunkNum => {
-                int start = chunkNum * chunkSize;
-                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+            Parallel.For(0, chunkCount, chunkIdx => {
+                int start = chunkIdx * chunkSize;
+                int end = (chunkIdx == chunkCount - 1) ? count : (chunkIdx + 1) * chunkSize;
 
-                for (int id = start; id < end; id++) {
+                for (int entityIdx = start; entityIdx < end; entityIdx++) {
+                    int id = entityIds[entityIdx];
                     action(
                         new Entity(world, id),
                         ref pool1.GetUnsafe(id));
@@ -167,15 +173,18 @@ namespace BlitzEcs {
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
 
+            int[] entityIds = matchedEntities.DirectKeys;
+
             int count = matchedEntities.Count;
             int chunkCount = MathUtil.CeilDivision(count, chunkSize);
 
             world.LockComponentPools();
-            Parallel.For(0, chunkCount - 1, chunkNum => {
-                int start = chunkNum * chunkSize;
-                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+            Parallel.For(0, chunkCount, chunkIdx => {
+                int start = chunkIdx * chunkSize;
+                int end = (chunkIdx == chunkCount - 1) ? count : (chunkIdx + 1) * chunkSize;
 
-                for (int id = start; id < end; id++) {
+                for (int entityIdx = start; entityIdx < end; entityIdx++) {
+                    int id = entityIds[entityIdx];
                     action(
                         ref pool1.GetUnsafe(id),
                         ref pool2.GetUnsafe(id));
@@ -190,15 +199,18 @@ namespace BlitzEcs {
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
 
+            int[] entityIds = matchedEntities.DirectKeys;
+
             int count = matchedEntities.Count;
             int chunkCount = MathUtil.CeilDivision(count, chunkSize);
 
             world.LockComponentPools();
-            Parallel.For(0, chunkCount - 1, chunkNum => {
-                int start = chunkNum * chunkSize;
-                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+            Parallel.For(0, chunkCount, chunkIdx => {
+                int start = chunkIdx * chunkSize;
+                int end = (chunkIdx == chunkCount - 1) ? count : (chunkIdx + 1) * chunkSize;
 
-                for (int id = start; id < end; id++) {
+                for (int entityIdx = start; entityIdx < end; entityIdx++) {
+                    int id = entityIds[entityIdx];
                     action(
                         new Entity(world, id),
                         ref pool1.GetUnsafe(id),
@@ -282,15 +294,18 @@ namespace BlitzEcs {
             var pool2 = world.GetComponentPool<C2>();
             var pool3 = world.GetComponentPool<C3>();
 
+            int[] entityIds = matchedEntities.DirectKeys;
+
             int count = matchedEntities.Count;
             int chunkCount = MathUtil.CeilDivision(count, chunkSize);
 
             world.LockComponentPools();
-            Parallel.For(0, chunkCount - 1, chunkNum => {
-                int start = chunkNum * chunkSize;
-                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+            Parallel.For(0, chunkCount, chunkIdx => {
+                int start = chunkIdx * chunkSize;
+                int end = (chunkIdx == chunkCount - 1) ? count : (chunkIdx + 1) * chunkSize;
 
-                for (int id = start; id < end; id++) {
+                for (int entityIdx = start; entityIdx < end; entityIdx++) {
+                    int id = entityIds[entityIdx];
                     action(
                         ref pool1.GetUnsafe(id),
                         ref pool2.GetUnsafe(id),
@@ -307,15 +322,18 @@ namespace BlitzEcs {
             var pool2 = world.GetComponentPool<C2>();
             var pool3 = world.GetComponentPool<C3>();
 
+            int[] entityIds = matchedEntities.DirectKeys;
+
             int count = matchedEntities.Count;
             int chunkCount = MathUtil.CeilDivision(count, chunkSize);
 
             world.LockComponentPools();
-            Parallel.For(0, chunkCount - 1, chunkNum => {
-                int start = chunkNum * chunkSize;
-                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+            Parallel.For(0, chunkCount, chunkIdx => {
+                int start = chunkIdx * chunkSize;
+                int end = (chunkIdx == chunkCount - 1) ? count : (chunkIdx + 1) * chunkSize;
 
-                for (int id = start; id < end; id++) {
+                for (int entityIdx = start; entityIdx < end; entityIdx++) {
+                    int id = entityIds[entityIdx];
                     action(
                         new Entity(world, id),
                         ref pool1.GetUnsafe(id),
@@ -409,15 +427,18 @@ namespace BlitzEcs {
             var pool3 = world.GetComponentPool<C3>();
             var pool4 = world.GetComponentPool<C4>();
 
+            int[] entityIds = matchedEntities.DirectKeys;
+
             int count = matchedEntities.Count;
             int chunkCount = MathUtil.CeilDivision(count, chunkSize);
 
             world.LockComponentPools();
-            Parallel.For(0, chunkCount - 1, chunkNum => {
-                int start = chunkNum * chunkSize;
-                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+            Parallel.For(0, chunkCount, chunkIdx => {
+                int start = chunkIdx * chunkSize;
+                int end = (chunkIdx == chunkCount - 1) ? count : (chunkIdx + 1) * chunkSize;
 
-                for (int id = start; id < end; id++) {
+                for (int entityIdx = start; entityIdx < end; entityIdx++) {
+                    int id = entityIds[entityIdx];
                     action(
                         ref pool1.GetUnsafe(id),
                         ref pool2.GetUnsafe(id),
@@ -436,15 +457,18 @@ namespace BlitzEcs {
             var pool3 = world.GetComponentPool<C3>();
             var pool4 = world.GetComponentPool<C4>();
 
+            int[] entityIds = matchedEntities.DirectKeys;
+
             int count = matchedEntities.Count;
             int chunkCount = MathUtil.CeilDivision(count, chunkSize);
 
             world.LockComponentPools();
-            Parallel.For(0, chunkCount - 1, chunkNum => {
-                int start = chunkNum * chunkSize;
-                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+            Parallel.For(0, chunkCount, chunkIdx => {
+                int start = chunkIdx * chunkSize;
+                int end = (chunkIdx == chunkCount - 1) ? count : (chunkIdx + 1) * chunkSize;
 
-                for (int id = start; id < end; id++) {
+                for (int entityIdx = start; entityIdx < end; entityIdx++) {
+                    int id = entityIds[entityIdx];
                     action(
                         new Entity(world, id),
                         ref pool1.GetUnsafe(id),
@@ -548,15 +572,18 @@ namespace BlitzEcs {
             var pool4 = world.GetComponentPool<C4>();
             var pool5 = world.GetComponentPool<C5>();
 
+            int[] entityIds = matchedEntities.DirectKeys;
+
             int count = matchedEntities.Count;
             int chunkCount = MathUtil.CeilDivision(count, chunkSize);
 
             world.LockComponentPools();
-            Parallel.For(0, chunkCount - 1, chunkNum => {
-                int start = chunkNum * chunkSize;
-                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+            Parallel.For(0, chunkCount, chunkIdx => {
+                int start = chunkIdx * chunkSize;
+                int end = (chunkIdx == chunkCount - 1) ? count : (chunkIdx + 1) * chunkSize;
 
-                for (int id = start; id < end; id++) {
+                for (int entityIdx = start; entityIdx < end; entityIdx++) {
+                    int id = entityIds[entityIdx];
                     action(
                         ref pool1.GetUnsafe(id),
                         ref pool2.GetUnsafe(id),
@@ -577,15 +604,18 @@ namespace BlitzEcs {
             var pool4 = world.GetComponentPool<C4>();
             var pool5 = world.GetComponentPool<C5>();
 
+            int[] entityIds = matchedEntities.DirectKeys;
+
             int count = matchedEntities.Count;
             int chunkCount = MathUtil.CeilDivision(count, chunkSize);
 
             world.LockComponentPools();
-            Parallel.For(0, chunkCount - 1, chunkNum => {
-                int start = chunkNum * chunkSize;
-                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+            Parallel.For(0, chunkCount, chunkIdx => {
+                int start = chunkIdx * chunkSize;
+                int end = (chunkIdx == chunkCount - 1) ? count : (chunkIdx + 1) * chunkSize;
 
-                for (int id = start; id < end; id++) {
+                for (int entityIdx = start; entityIdx < end; entityIdx++) {
+                    int id = entityIds[entityIdx];
                     action(
                         new Entity(world, id),
                         ref pool1.GetUnsafe(id),

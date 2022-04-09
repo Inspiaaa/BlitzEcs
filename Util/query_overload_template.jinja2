@@ -85,15 +85,18 @@ namespace BlitzEcs {
             {% for comp in components -%}
             var pool{{ loop.index }} = world.GetComponentPool<{{ comp }}>();
             {% endfor %}
+            int[] entityIds = matchedEntities.DirectKeys;
+
             int count = matchedEntities.Count;
             int chunkCount = MathUtil.CeilDivision(count, chunkSize);
 
             world.LockComponentPools();
-            Parallel.For(0, chunkCount - 1, chunkNum => {
-                int start = chunkNum * chunkSize;
-                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+            Parallel.For(0, chunkCount, chunkIdx => {
+                int start = chunkIdx * chunkSize;
+                int end = (chunkIdx == chunkCount - 1) ? count : (chunkIdx + 1) * chunkSize;
 
-                for (int id = start; id < end; id++) {
+                for (int entityIdx = start; entityIdx < end; entityIdx++) {
+                    int id = entityIds[entityIdx];
                     action(
                         {%- for comp in components %}
                         ref pool{{ loop.index }}.GetUnsafe(id) {{- "," if not loop.last }}
@@ -110,15 +113,18 @@ namespace BlitzEcs {
             {% for comp in components -%}
             var pool{{ loop.index }} = world.GetComponentPool<{{ comp }}>();
             {% endfor %}
+            int[] entityIds = matchedEntities.DirectKeys;
+
             int count = matchedEntities.Count;
             int chunkCount = MathUtil.CeilDivision(count, chunkSize);
 
             world.LockComponentPools();
-            Parallel.For(0, chunkCount - 1, chunkNum => {
-                int start = chunkNum * chunkSize;
-                int end = (chunkNum == chunkCount - 1) ? count : (chunkNum + 1) * chunkSize;
+            Parallel.For(0, chunkCount, chunkIdx => {
+                int start = chunkIdx * chunkSize;
+                int end = (chunkIdx == chunkCount - 1) ? count : (chunkIdx + 1) * chunkSize;
 
-                for (int id = start; id < end; id++) {
+                for (int entityIdx = start; entityIdx < end; entityIdx++) {
+                    int id = entityIds[entityIdx];
                     action(
                         new Entity(world, id),
                         {%- for comp in components %}
