@@ -242,7 +242,32 @@ foreach (Entity entity in query) {
 world.UnlockComponentPools();
 ```
 
+#### Executing custom logic when a component is removed
 
+BlitzEcs also allows you to run custom code on a component when it is removed, e.g. to perform a clean-up operation, by implementing the `IEcsAutoDestroyer` interface on a component. 
+
+Due to BlitzEcs' implementation of this feature that aims to avoid all boxing operations and GC allocations, the `OnDestroy` method behaves more like a static method. Internally a separate component of this type is created and every component that is removed from the pool is passed to this separate component.
+
+```csharp
+struct NameComponent : IEcsAutoDestroyer<NameComponent> {
+    public string name;
+
+    public void OnDestroy(ref NameComponent nameComponent) {
+        // Watch out: Use nameComponent.name and not this.name
+        Console.WriteLine($"NameComponent removed from entity {nameComponent.name}.");
+    }
+}
+```
+
+No changes have to be made when removing a component, calling your custom code is handled internally:
+
+```csharp
+Entity entity = world.Spawn()
+    .Add<NameComponent>(new NameComponent { name = "Alice" });
+
+entity.Remove<NameComponent>();
+// Output: NameComponent removed from entity Alice.
+```
 
 ## Credits
 
