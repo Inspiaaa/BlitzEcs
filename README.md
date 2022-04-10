@@ -2,7 +2,7 @@
 
 BlitzEcs is a lightning-fast, memory-efficient, sparse set based ECS (Entity Component System) framework written in C# for making games. It is bare bones, can be easily integrated into existing systems / games, and can be used side by side with object oriented design to allow for a hybrid approach.
 
-### Why use BlitzEcs?
+## Why use BlitzEcs?
 
 - Lightweight and efficient
 
@@ -25,15 +25,15 @@ BlitzEcs is a lightning-fast, memory-efficient, sparse set based ECS (Entity Com
 
 - No external dependencies
 
-### Quick overview
+## Quick overview
 
-##### Importing the framework:
+#### Importing the framework:
 
 ```csharp
 using BlitzEcs;
 ```
 
-##### Creating components
+#### Creating components
 
 ```csharp
 public struct Transform {
@@ -48,13 +48,13 @@ public struct Velocity {
 public struct EnemyTeam { }
 ```
 
-##### Creating a world
+#### Creating a world
 
 ```csharp
 var world = new World();
 ```
 
-##### Spawning in entities
+#### Spawning in entities
 
 ```csharp
 // First entity
@@ -73,13 +73,13 @@ transform.x = 2;
 transform.y = 10;
 ```
 
-##### Removing components
+#### Removing components
 
 ```csharp
 entity.Remove<EnemyTeam>();
 ```
 
-##### Despawning entities
+#### Despawning entities
 
 ```csharp
 entity.Despawn();
@@ -94,7 +94,7 @@ entity.Remove<Transform>();
 
 Don't use the `Entity` instance after despawning, as this may lead to errors or unexpected behaviour when the entity id is recycled.
 
-##### Creating systems
+#### Creating systems
 
 ```csharp
 var query = new Query<Transform>(world);
@@ -159,7 +159,7 @@ public class Game {
 
 You can still add and remove components during iteration. To avoid any problems with the iterator, components are automatically removed after iteration.
 
-##### Parallel processing
+#### Parallel processing
 
 To use multi-threading to process the entities in parallel, you only have to change the `ForEach` call to `ParallelForEach`:
 
@@ -184,7 +184,7 @@ query.ParallelForEach(
 
 Warning: Most of the API of BlitzEcs is not thread-safe. To avoid any problems with parallel processing, it is recommended to only use this feature for systems that process the components (i.e. change values, read values, ...) but don't create new entities, new components, remove components, ... as shown in the example above.
 
-##### Excluding and including components
+#### Excluding and including components
 
 BlitzEcs allows you to also filter the entities of a query further by letting you exclude and include more components. These are however not directly included in the parameters of the `ForEach` method.
 
@@ -199,7 +199,7 @@ query.Exc<EnemyTeam>();
 query.ForEach((ref Transform transform) => {});
 ```
 
-##### Iterating over entities manually
+#### Iterating over entities manually
 
 ```csharp
 // This method is automatically called when you use query.ForEach(...).
@@ -244,6 +244,6 @@ world.UnlockComponentPools();
 
 
 
-### Credits
+## Credits
 
 This project is greatly inspired by [Byteron/ecs](https://github.com/Byteron/ecs).
