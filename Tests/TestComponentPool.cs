@@ -110,5 +110,32 @@ namespace BlitzEcs.Tests {
 
             Assert.Throws<InvalidOperationException>(() => pool.Get(1));
         }
+
+        private struct MyComponent : IEcsAutoDestroyer<MyComponent> {
+            Action action;
+
+            public MyComponent(Action action) => this.action = action;
+
+            public void OnDestroy(ref MyComponent component) {
+                component.action();
+            }
+        }
+
+        [Test]
+        public void Test_auto_destroyer_is_called_when_a_component_is_removed() {
+            var pool = new ComponentPool<MyComponent>(new MockEntityManager(), 0);
+
+            bool wasE0Destroyed = false;
+            bool wasE1Destroyed = false;
+
+            pool.Add(0, new MyComponent(() => wasE0Destroyed = true));
+            pool.Add(1, new MyComponent(() => wasE1Destroyed = true));
+
+            pool.Remove(0);
+            pool.Remove(1);
+
+            Assert.True(wasE0Destroyed);
+            Assert.True(wasE1Destroyed);
+        }
     }
 }

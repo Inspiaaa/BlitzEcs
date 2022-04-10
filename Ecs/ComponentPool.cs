@@ -23,6 +23,8 @@ namespace BlitzEcs {
         public int Count => count;
 
         private SparseSet<bool> entitiesToRemove;
+        // Used for running custom clean-up logic when a component is destroyed.
+        private IEcsAutoDestroyer<TComponent> autoDestroyer;
 
         public TComponent[] RawComponents => components;
         public int[] RawEntityIds => componentIdxToEntityId;
@@ -41,6 +43,10 @@ namespace BlitzEcs {
             count = 0;
 
             entitiesToRemove = new SparseSet<bool>();
+            // To avoid boxing and heap allocations when destroying a component, only one
+            // component is boxed and then used to destroy the other components, which
+            // therefore don't have to be individually boxed.
+            autoDestroyer = default(TComponent) as IEcsAutoDestroyer<TComponent>;
         }
 
         private int GetComponentIdx(int entityId) {
@@ -100,6 +106,7 @@ namespace BlitzEcs {
             int lastCompIdx = count - 1;
             int compIdxToBeDeleted = entityIdToComponentIdx[entityId];
             int lastEntityId = componentIdxToEntityId[lastCompIdx];
+            TComponent deletedComponent = components[compIdxToBeDeleted];
             TComponent lastComponent = components[lastCompIdx];
 
             // Replace the item to be deleted with the last item.
@@ -115,6 +122,7 @@ namespace BlitzEcs {
                 Shrink();
             }
 
+            autoDestroyer?.OnDestroy(ref deletedComponent);
             world.OnRemoveComponentFromEntity(entityId, poolId);
         }
 
