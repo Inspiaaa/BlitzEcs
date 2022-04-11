@@ -24,8 +24,8 @@ namespace BlitzEcs {
             Entity e,
             ref C1 c1);
 
-        public void ForEach(RefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(RefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
 
@@ -41,8 +41,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ForEach(EntityRefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(EntityRefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
 
@@ -59,8 +59,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ParallelForEach(RefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(RefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
 
@@ -83,8 +83,8 @@ namespace BlitzEcs {
             world.UnlockComponentPools();
         }
 
-        public void ParallelForEach(EntityRefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(EntityRefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
 
@@ -128,8 +128,8 @@ namespace BlitzEcs {
             ref C1 c1,
             ref C2 c2);
 
-        public void ForEach(RefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(RefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -147,8 +147,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ForEach(EntityRefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(EntityRefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -167,8 +167,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ParallelForEach(RefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(RefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -193,8 +193,8 @@ namespace BlitzEcs {
             world.UnlockComponentPools();
         }
 
-        public void ParallelForEach(EntityRefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(EntityRefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -244,8 +244,8 @@ namespace BlitzEcs {
             ref C2 c2,
             ref C3 c3);
 
-        public void ForEach(RefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(RefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -265,8 +265,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ForEach(EntityRefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(EntityRefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -287,8 +287,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ParallelForEach(RefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(RefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -315,8 +315,8 @@ namespace BlitzEcs {
             world.UnlockComponentPools();
         }
 
-        public void ParallelForEach(EntityRefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(EntityRefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -372,8 +372,8 @@ namespace BlitzEcs {
             ref C3 c3,
             ref C4 c4);
 
-        public void ForEach(RefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(RefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -395,8 +395,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ForEach(EntityRefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(EntityRefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -419,8 +419,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ParallelForEach(RefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(RefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -449,8 +449,8 @@ namespace BlitzEcs {
             world.UnlockComponentPools();
         }
 
-        public void ParallelForEach(EntityRefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(EntityRefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -512,8 +512,8 @@ namespace BlitzEcs {
             ref C4 c4,
             ref C5 c5);
 
-        public void ForEach(RefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(RefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -537,8 +537,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ForEach(EntityRefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(EntityRefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -563,8 +563,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ParallelForEach(RefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(RefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -595,8 +595,8 @@ namespace BlitzEcs {
             world.UnlockComponentPools();
         }
 
-        public void ParallelForEach(EntityRefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(EntityRefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -664,8 +664,8 @@ namespace BlitzEcs {
             ref C5 c5,
             ref C6 c6);
 
-        public void ForEach(RefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(RefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -691,8 +691,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ForEach(EntityRefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(EntityRefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -719,8 +719,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ParallelForEach(RefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(RefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -753,8 +753,8 @@ namespace BlitzEcs {
             world.UnlockComponentPools();
         }
 
-        public void ParallelForEach(EntityRefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(EntityRefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -828,8 +828,8 @@ namespace BlitzEcs {
             ref C6 c6,
             ref C7 c7);
 
-        public void ForEach(RefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(RefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -857,8 +857,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ForEach(EntityRefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(EntityRefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -887,8 +887,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ParallelForEach(RefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(RefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -923,8 +923,8 @@ namespace BlitzEcs {
             world.UnlockComponentPools();
         }
 
-        public void ParallelForEach(EntityRefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(EntityRefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -1004,8 +1004,8 @@ namespace BlitzEcs {
             ref C7 c7,
             ref C8 c8);
 
-        public void ForEach(RefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(RefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -1035,8 +1035,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ForEach(EntityRefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(EntityRefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -1067,8 +1067,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ParallelForEach(RefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(RefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();
@@ -1105,8 +1105,8 @@ namespace BlitzEcs {
             world.UnlockComponentPools();
         }
 
-        public void ParallelForEach(EntityRefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(EntityRefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             var pool1 = world.GetComponentPool<C1>();
             var pool2 = world.GetComponentPool<C2>();

@@ -36,8 +36,8 @@ namespace BlitzEcs {
             {%- endfor -%}
         );
 
-        public void ForEach(RefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(RefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             {% for comp in components -%}
             var pool{{ loop.index }} = world.GetComponentPool<{{ comp }}>();
@@ -57,8 +57,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ForEach(EntityRefAction action) {
-            if (! hot) Fetch();
+        public void ForEach(EntityRefAction action, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             {% for comp in components -%}
             var pool{{ loop.index }} = world.GetComponentPool<{{ comp }}>();
@@ -79,8 +79,8 @@ namespace BlitzEcs {
             }
         }
 
-        public void ParallelForEach(RefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(RefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             {% for comp in components -%}
             var pool{{ loop.index }} = world.GetComponentPool<{{ comp }}>();
@@ -107,8 +107,8 @@ namespace BlitzEcs {
             world.UnlockComponentPools();
         }
 
-        public void ParallelForEach(EntityRefAction action, int chunkSize=64) {
-            if (! hot) Fetch();
+        public void ParallelForEach(EntityRefAction action, int chunkSize = 64, bool shouldFetch = true) {
+            if (!hot && shouldFetch) Fetch();
 
             {% for comp in components -%}
             var pool{{ loop.index }} = world.GetComponentPool<{{ comp }}>();
