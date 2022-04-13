@@ -47,7 +47,7 @@ namespace BlitzEcs {
             return query;
         }
 
-        public void CacheQuery(Query query) {
+        private void CacheQuery(Query query) {
             // Adds the query to the list of hot queries that are actively updated about
             // component adds / removes, so that they don't have to do a Fetch() on every execution.
 
@@ -145,6 +145,11 @@ namespace BlitzEcs {
 
             pool = allComponentPools[poolId];
             return true;
+        }
+
+        public void SetDestroyHandler<TComponent>(IEcsDestroyHandler<TComponent> destroyHandler)
+        where TComponent : struct {
+            GetComponentPool<TComponent>().SetDestroyHandler(destroyHandler);
         }
 
         private void UpdateHotQueriesAfterAddingComponent(int entityId, int poolId) {

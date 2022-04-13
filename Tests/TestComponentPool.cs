@@ -111,7 +111,7 @@ namespace BlitzEcs.Tests {
             Assert.Throws<InvalidOperationException>(() => pool.Get(1));
         }
 
-        private struct MyComponent : IEcsAutoDestroyer<MyComponent> {
+        private struct MyComponent : IEcsDestroyHandler<MyComponent> {
             Action action;
 
             public MyComponent(Action action) => this.action = action;

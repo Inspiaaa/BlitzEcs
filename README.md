@@ -244,12 +244,12 @@ world.UnlockComponentPools();
 
 #### Executing custom logic when a component is removed
 
-BlitzEcs also allows you to run custom code on a component when it is removed, e.g. to perform a clean-up operation, by implementing the `IEcsAutoDestroyer` interface on a component. 
+BlitzEcs also allows you to run custom code on a component when it is removed, e.g. to perform a clean-up operation, by implementing the `IEcsDestroyHandler` interface on a component. 
 
 Due to BlitzEcs' implementation of this feature that aims to avoid all boxing operations and GC allocations, the `OnDestroy` method behaves more like a static method. Internally a separate component of this type is created and every component that is removed from the pool is passed to this separate component.
 
 ```csharp
-struct NameComponent : IEcsAutoDestroyer<NameComponent> {
+public struct NameComponent : IEcsDestroyHandler<NameComponent> {
     public string name;
 
     public void OnDestroy(ref NameComponent nameComponent) {
@@ -267,6 +267,47 @@ Entity entity = world.Spawn()
 
 entity.Remove<NameComponent>();
 // Output: NameComponent removed from entity Alice.
+```
+
+Alternatively, you can also use a different object / class for the destroy handler:
+
+```csharp
+public class NameComponentDestroyer : IEcsDestroyHandler<NameComponent> {
+    public void OnDestroy(ref NameComponent nameComponent) {
+        Console.WriteLine($"NameComponent removed from entity {nameComponent.name}.");
+    }
+}
+```
+
+And then to use it:
+
+```csharp
+var nameComponentDestroyer = new NameComponentDestroyer();
+world.SetDestroyHandler<NameComponent>(nameComponentDestroyer);
+```
+
+You can then also implement a handler for multiple components:
+
+```csharp
+public class DestroyHandler
+    : IEcsDestroyHandler<Transform>, IEcsDestroyHandler<Velocity> {
+
+    public void OnDestroy(ref Transform transform) {
+        // ...
+    }
+
+    public void OnDestroy(ref Velocity velocity) {
+        // ...
+    }
+}
+```
+
+And then to use it:
+
+```csharp
+var destroyHandler = new DestroyHandler();
+world.SetDestroyHandler<Transform>(destroyHandler);
+world.SetDestroyHandler<Velocity>(destroyHandler);
 ```
 
 ## Credits
