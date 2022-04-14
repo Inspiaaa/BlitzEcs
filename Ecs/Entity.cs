@@ -27,6 +27,10 @@ namespace BlitzEcs {
             return ref world.GetComponentPool<TComponent>().Get(id);
         }
 
+        public ref TComponent GetUnsafe<TComponent>() where TComponent : struct {
+            return ref world.GetComponentPool<TComponent>().GetUnsafe(id);
+        }
+
         public Entity Remove<TComponent>() where TComponent : struct {
             world.GetComponentPool<TComponent>().Remove(id);
             return this;
