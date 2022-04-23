@@ -44,7 +44,11 @@ namespace BlitzEcs {
             {% endfor %}
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         {%- for comp in components %}
                         ref pool{{ loop.index }}.GetUnsafe(id) {{- "," if not loop.last }}
@@ -65,7 +69,11 @@ namespace BlitzEcs {
             {% endfor %}
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         new Entity(world, id),
                         {%- for comp in components %}

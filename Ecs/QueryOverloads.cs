@@ -31,7 +31,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         ref pool1.GetUnsafe(id));
                 }
@@ -48,7 +52,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         new Entity(world, id),
                         ref pool1.GetUnsafe(id));
@@ -136,7 +144,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         ref pool1.GetUnsafe(id),
                         ref pool2.GetUnsafe(id));
@@ -155,7 +167,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         new Entity(world, id),
                         ref pool1.GetUnsafe(id),
@@ -253,7 +269,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         ref pool1.GetUnsafe(id),
                         ref pool2.GetUnsafe(id),
@@ -274,7 +294,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         new Entity(world, id),
                         ref pool1.GetUnsafe(id),
@@ -382,7 +406,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         ref pool1.GetUnsafe(id),
                         ref pool2.GetUnsafe(id),
@@ -405,7 +433,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         new Entity(world, id),
                         ref pool1.GetUnsafe(id),
@@ -523,7 +555,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         ref pool1.GetUnsafe(id),
                         ref pool2.GetUnsafe(id),
@@ -548,7 +584,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         new Entity(world, id),
                         ref pool1.GetUnsafe(id),
@@ -676,7 +716,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         ref pool1.GetUnsafe(id),
                         ref pool2.GetUnsafe(id),
@@ -703,7 +747,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         new Entity(world, id),
                         ref pool1.GetUnsafe(id),
@@ -841,7 +889,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         ref pool1.GetUnsafe(id),
                         ref pool2.GetUnsafe(id),
@@ -870,7 +922,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         new Entity(world, id),
                         ref pool1.GetUnsafe(id),
@@ -1018,7 +1074,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         ref pool1.GetUnsafe(id),
                         ref pool2.GetUnsafe(id),
@@ -1049,7 +1109,11 @@ namespace BlitzEcs {
 
             world.LockComponentPools();
             try {
-                foreach (int id in matchedEntities.Keys) {
+                int[] ids = matchedEntities.DirectKeys;
+                int count = matchedEntities.Count;
+
+                for(int idx = 0; idx < count; idx ++) {
+                    int id = ids[idx];
                     action(
                         new Entity(world, id),
                         ref pool1.GetUnsafe(id),
