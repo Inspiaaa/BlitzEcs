@@ -46,12 +46,19 @@ namespace BlitzEcs {
         }
 
         internal void OnCache() {
+            // Called when the World caches this query.
+
             if (hot)
                 return;
 
             Fetch();
             hot = true;
             matchedEntities.AutoShrink = true;
+        }
+
+        internal void MirrorCachedQuery(Query sourceQuery) {
+            matchedEntities = sourceQuery.matchedEntities;
+            hot = true;
         }
 
         public Query Inc<TComponent>() where TComponent : struct {

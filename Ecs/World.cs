@@ -36,15 +36,33 @@ namespace BlitzEcs {
             cachedQueriesByMask = new Dictionary<Mask, Query>();
         }
 
-        public TQuery GetCachedQuery<TQuery>(TQuery query) where TQuery : Query {
-            // TODO: Currently does not work for Query().Inc<C> and Query<C>().
-
+        public TQuery GetCached<TQuery>(TQuery query) where TQuery : Query {
             if (cachedQueriesByMask.TryGetValue(query.Mask, out Query cachedQuery)) {
-                return (TQuery)cachedQuery;
+                if (cachedQuery is TQuery targetQuery) {
+                    return targetQuery;
+                }
+
+                // When two queries have the same mask, but different types, like e.g.
+                // Query().Inc<C> and Query<C>(), the same query instance can obviously
+                // not be reused.
+                // Solution: Cache one of the queries and make the other queries
+                // with the same mask "mirror" the source.
+                // (They share the same matchedEntities sparse set)
+                query.MirrorCachedQuery(cachedQuery);
+                return query;
             }
 
             CacheQuery(query);
             return query;
+        }
+
+        public void Cache(Query query) {
+            if (cachedQueriesByMask.TryGetValue(query.Mask, out Query cachedQuery)) {
+                query.MirrorCachedQuery(cachedQuery);
+            }
+            else {
+                CacheQuery(query);
+            }
         }
 
         private void CacheQuery(Query query) {

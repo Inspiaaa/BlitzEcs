@@ -121,7 +121,7 @@ namespace BlitzEcs.Benchmarks {
             }
 
             public void Run(int n) {
-                var query = world.GetCachedQuery(new Query<Position, Rotation>(world));
+                var query = world.GetCached(new Query<Position, Rotation>(world));
 
                 for (int i = 0; i < n; i ++){
                     query.ForEach((Entity e, ref Position pos, ref Rotation rot) => { });

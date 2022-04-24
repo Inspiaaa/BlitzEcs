@@ -101,7 +101,7 @@ namespace BlitzEcs.Tests {
             int e1 = world.Spawn().Add<int>().Add<bool>();
             int e2 = world.Spawn().Add<int>();
 
-            var query = world.GetCachedQuery(new Query(world).Inc<int>().Exc<bool>());
+            var query = world.GetCached(new Query(world).Inc<int>().Exc<bool>());
 
             (int[] ids, int count) = query.MatchedEntityIds;
             Assert.AreEqual(2, count);
@@ -111,7 +111,7 @@ namespace BlitzEcs.Tests {
 
         [Test]
         public void Test_hot_query_keeps_track_of_newly_added_comps() {
-            var query = world.GetCachedQuery(new Query(world).Inc<int>().Exc<bool>());
+            var query = world.GetCached(new Query(world).Inc<int>().Exc<bool>());
 
             int e0 = world.Spawn().Add<int>();
             Entity e1 = world.Spawn().Add<int>();
@@ -130,7 +130,7 @@ namespace BlitzEcs.Tests {
             Entity e1 = world.Spawn().Add<int>().Add<bool>();
             Entity e2 = world.Spawn().Add<int>();
 
-            var query = world.GetCachedQuery(new Query(world).Inc<int>().Exc<bool>());
+            var query = world.GetCached(new Query(world).Inc<int>().Exc<bool>());
 
             world.Despawn(e0);
 
@@ -168,6 +168,28 @@ namespace BlitzEcs.Tests {
             Assert.False(e0.Has<int>());
             Assert.False(e1.Has<int>());
             Assert.False(e2.Has<int>());
+        }
+
+        [Test]
+        public void Test_mirrored_query_stays_updated() {
+            var source = world.GetCached(new Query(world).Inc<int>().Exc<bool>());
+            var mirrored = new Query<int>(world);
+            mirrored.Exc<bool>();
+            world.Cache(mirrored);
+
+            Entity e0 = world.Spawn().Add<int>().Add<bool>();
+            Entity e1 = world.Spawn().Add<int>();
+            Entity e2 = world.Spawn().Add<int>().Add<bool>();
+
+            bool visitedE1 = false;
+            mirrored.ForEach((Entity entity, ref int value) => {
+                if (entity != e1) {
+                    Assert.Fail($"Entity {entity} should not have been matched.");
+                }
+                visitedE1 = true;
+            });
+
+            Assert.True(visitedE1);
         }
     }
 }
