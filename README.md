@@ -1,6 +1,6 @@
 # BlitzEcs
 
-BlitzEcs is a lightning-fast, memory-efficient, sparse set based ECS (Entity Component System) framework written in C# for making games. It is bare bones, can be easily integrated into existing systems / games, and can be used side by side with object oriented design to allow for a hybrid approach.
+BlitzEcs is a lightning-fast, memory-efficient, sparse set based ECS (Entity Component System) library written in C# for making games. It is bare bones, can be easily integrated into existing systems / games, and can be used side by side with object oriented design to allow for a hybrid approach.
 
 ## Why use BlitzEcs?
 
@@ -21,13 +21,15 @@ BlitzEcs is a lightning-fast, memory-efficient, sparse set based ECS (Entity Com
 
 - No runtime code generation required (can be used with AOT compilation)
 
+- Sparse set based => adding and removing components is extremely lightweight.
+
 - Pure C# code
 
 - No external dependencies
 
 ## Quick overview
 
-#### Importing the framework:
+#### Importing BlitzEcs:
 
 ```csharp
 using BlitzEcs;
@@ -308,6 +310,37 @@ And then to use it:
 var destroyHandler = new DestroyHandler();
 world.SetDestroyHandler<Transform>(destroyHandler);
 world.SetDestroyHandler<Velocity>(destroyHandler);
+```
+
+#### Caching queries
+
+To improve the performance of queries you can also cache them. This means that they don't have to fetch a list of entities to iterate over each time, but rather that this list of entities is kept updated. When a component is added / removed, the hot queries (i.e. cached queries) are informed about this change and are automatically updated.
+
+If you have a query, e.g.
+
+```csharp
+var query = new Query<Transform, Velocity>(world);
+query.Exc<EnemyTeam>();
+```
+
+then you can cache it:
+
+```csharp
+world.Cache(query);
+```
+
+The query can simply be used like a normal query afterwards, e.g.
+
+```csharp
+query.ForEach((ref Transform transform, ref Velocity velocity) => {
+    // ...
+});
+```
+
+Sometimes you can even reuse the same query instance between multiple systems. The `GetCached` method either caches the query and returns it or returns an already cached query:
+
+```csharp
+var query = world.GetCached(new Query<Transform>(world));
 ```
 
 ## Credits
